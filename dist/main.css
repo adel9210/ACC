@@ -1,0 +1,14 @@
+.accessibility {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  width: 280px;
+  padding: 15px 18.5px 30px 19.5px;
+  -webkit-box-shadow: 2px 2px 5px #ccc;
+          box-shadow: 2px 2px 5px #ccc;
+}
+
+.accessibility__heading {
+  font-size: 17px;
+  font-weight: bold;
+}
+/*# sourceMappingURL=main.css.map */

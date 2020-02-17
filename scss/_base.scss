@@ -1,0 +1,14 @@
+/////////////////////////////////////////////////////
+///////////////////// ACCESSIBILITY CONTAINER
+.accessibility {
+    font-family:'Open Sans', sans-serif;
+    font-weight: 400;
+    width: 280px;
+    padding: 15px 18.5px 30px 19.5px;
+    box-shadow: 2px 2px 5px #ccc;
+
+    &__heading {
+        font-size: 17px;
+        font-weight: bold;
+    }
+}

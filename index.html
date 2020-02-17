@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,61 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="dist/main.css">
 </head>
+
 <body>
 
     <section id="accessibility" class="accessibility">
         <h2 class="accessibility__heading">Accessibility tool Panel</h2>
+
+        <div class="accessibility__item accessibility__font-resize">
+            <h3 class="accessibility__item--heading">Font Resize</h3>
+            <div class="accessibility__item--box">
+                <div class="box increase">A+</div>
+                <div class="box default active">A</div>
+                <div class="box decrease">A-</div>
+            </div>
+        </div>
+
+        
+        <div class="accessibility__item accessibility__contrast-theme">
+            <h3 class="accessibility__item--heading">Contrast Theme</h3>
+            <div class="accessibility__item--box">
+                <div class="box theme-primary"></div>
+                <div class="box theme-secondary"></div>
+            </div>
+        </div>
+
+        <div class="accessibility__item accessibility__highlight-links">
+            <div class="accessibility__item--circle">
+                <h3 class="accessibility__item--heading">Highlight Links</h3>
+                <div class="circle">&circledast;</div>
+            </div>
+        </div>
+
+        <div class="accessibility__item accessibility__highlight-heading">
+            <div class="accessibility__item--circle">
+                <h3 class="accessibility__item--heading">Highlight Heading</h3>
+                <div class="circle active">&circledast;</div>
+            </div>
+        </div>
+
+        <div class="accessibility__item accessibility__readable-font">
+            <div class="accessibility__item--circle">
+                <h3 class="accessibility__item--heading">Readable Font</h3>
+                <div class="circle">&circledast;</div>
+            </div>
+        </div>
+
+        <div class="accessibility__item accessibility__zooming">
+            <h3 class="accessibility__item--heading">Zooming</h3>
+            <div class="accessibility__item--box">
+                <div class="box zoom-in">&acirc;</div>
+                <div class="box zoom-out active">&acE;</div>
+            </div>
+        </div>
+
     </section>
-    
+
 </body>
+
 </html>

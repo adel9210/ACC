@@ -1,0 +1,24 @@
+.accessibility__buttons {
+    text-align: center;
+
+    & .save-preference {
+        display: block;
+        width: 100%;
+        border: 0;
+        background-color: $color-primary;
+        color: #fff;
+        height: 34px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+
+    .reset {
+        color: red;
+        display: block;
+        text-decoration: none;
+        
+        &::first-letter {
+            text-decoration: underline;
+        }
+    }
+}

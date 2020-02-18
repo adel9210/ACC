@@ -1,12 +1,32 @@
 .accessibility__item {
     border-bottom: 1px solid $color-grey-light-1;
     margin-bottom: 15px;
-    padding-bottom: 20px;
+    padding-bottom: 15px;
 
     &--heading {
         font-size: 1rem;
         font-weight: 600;
         color: $color-primary;
+        margin-bottom: 10px;
+    }
+
+    &--heading-1 {
+        font-size: 0.6875rem;
+        font-weight: 400;
+        color: $color-grey;
+        margin-bottom: 10px;
+        text-decoration: none;
+        display: inline-block;
+
+        &::first-letter {
+            text-decoration: underline!important;
+        }
+    }
+
+    &--heading-2 {
+        font-size: 0.9375rem;
+        font-weight: 400;
+        color: $color-grey;
         margin-bottom: 10px;
     }
 
@@ -59,7 +79,35 @@
         }
     }
 
-    .active {
+
+    & .icon {
+        font-size: 1rem;
+        font-weight: 400!important;
+        transition: background .4s;
+
+        &:hover {
+            background-color: $color-primary;
+            color: $color-white;
+        }
+    }
+
+    &.accessibility__read-speaker,  &.accessibility__reader-guide {
+        a {
+            text-decoration: none;
+        }
+
+        .icon {
+            &:hover {
+                background-color: transparent;
+            }
+        }
+    }
+
+    &.accessibility__read-speaker {
+        .icon { color: $color-secondary}
+    }
+
+    & .active {
         background-color: $color-primary;
         color: $color-white;
     }

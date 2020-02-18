@@ -19,27 +19,30 @@
    //////////////////////////////////////////////////////////////////////////
    /////////////////////// VIEW
 
-   var DOMStrings, htmlRender
+   var DOMStrings, htmlRender, container
+   container = '#accessibility.accessibility ';
    DOMStrings = {
       body: 'body',
       head: 'head',
       html: 'html',
-      fontIncrease: '.accessability__href--increase',
-      fontDecrease: '.accessability__href--decrease',
+      fontIncrease: container + '.increase',
+      fontDecrease: container + '.decrease',
+      fontDefault:  container + '.default',
 
       accessability__link: '.accessability__link',
       accessability__main: '.accessability__main',
       accessability__items: '.accessability__items',
 
+      highLightLinks: container + '.highlight-links',
+      highLightHeadings: container + '.highlight-headings',
       fontUnderLine: '.accessability__href--underLine',
       fontReadable: '.accessability__href--font-readable',
       highContrast: '.accessability__href--high-contrast',
       negativeContrast: '.accessability__href--negative-contrast',
       readGuide: '.accessability__href--read-guide',
-      highLightLinks: '.accessability__href--hight-light-links',
       letterSpacing: '.accessability__href--letter-spacing',
       wordSpacing: '.accessability__href--word-spacing',
-      reset: '.accessability__href--reset',
+      reset: '.reset',
 
       // HELPERS CSS CLASSES
       underLineClass: 'ACC__UNDERLINECLASS',
@@ -47,7 +50,8 @@
       highContrastClass: 'ACC__HIGHCONTRAST',
       fontReadableClass: 'ACC__FONTREADABLE',
       readGuideClass: '.ACC__READGUIDELINE',
-      highLightLinksClass: 'ACC__HIGHLIGHTLINKD',
+      highLightLinksClass: 'ACC__HIGHLIGHTLINK',
+      highLightHeadingsClass: 'ACC__HIGHLIGHTHEADINGS',
       letterSpacingClass: 'ACC__LETTERSPACING',
       wordSpacingClass: 'ACC__WORDSPACING'
 
@@ -81,10 +85,10 @@
       }
 
       // Append Reset
-      itemList += markup.reset;
+      // itemList += markup.reset;
 
-      markup.wrapper = markup.wrapper.replace('%items%', itemList);
-      _$(selector).innerHTML = markup.wrapper;
+      // markup.wrapper = markup.wrapper.replace('%items%', itemList);
+      // _$(selector).innerHTML = markup.wrapper;
    }
 
 
@@ -145,7 +149,7 @@
       // CONTROL SHOW AND HIDE ELEMENTS
       fontIncrease: false,
       fontDecrease: false,
-      headingHighlight: false,
+      highLightHeadings: false,
       linkHighlight: false,
       linkUnderLine: false,
       highContrast: false,
@@ -162,8 +166,9 @@
 
       if (this.options.fontSize) {
          // FONT RESIZE EVENT
-         this.on(_$(DOMSelector.fontIncrease), 'click', fontResize.bind(null, this.options.fontSize, 'increase'))
-         this.on(_$(DOMSelector.fontDecrease), 'click', fontResize.bind(null, this.options.fontSize, 'decrease'))
+         this.on(_$(DOMSelector.fontIncrease), 'click', fontResize.bind(null, 'increase'));
+         this.on(_$(DOMSelector.fontDecrease), 'click', fontResize.bind(null, 'decrease'));
+         this.on(_$(DOMSelector.fontDefault), 'click', fontResize.bind(null, 'default'));
       }
 
       // LINK UNDERLINE
@@ -197,6 +202,10 @@
          this.on(_$(DOMSelector.highLightLinks), 'click', highLightLinks);
       }
 
+      if (this.options.highLightHeadings) {
+         this.on(_$(DOMSelector.highLightHeadings), 'click', headingHighlight);
+      }
+
       // LETTER SPACING
       if (this.options.letterSpacing) {
          this.on(_$(DOMSelector.letterSpacing), 'click', letterSpacing);
@@ -210,10 +219,10 @@
       _$(DOMSelector.reset).addEventListener('click', reset);
 
       // MENU TOGGLE FUNCTION
-      _$(DOMSelector.accessability__link).addEventListener('click', function () {
-         _$(DOMSelector.accessability__main).classList.toggle('rightPosition');
-         this.classList.toggle('rightPosition-link');
-      });
+      // _$(DOMSelector.accessability__link).addEventListener('click', function () {
+      //    _$(DOMSelector.accessability__main).classList.toggle('rightPosition');
+      //    this.classList.toggle('rightPosition-link');
+      // });
 
 
 
@@ -295,62 +304,20 @@
     * Attaches to an internal event.
     * @protected
     * @param {string} size - The font size.
-    * @variable {number} fontIndex - to handle toggle between font sizes
+    * @variable {number} fontSize - to handle toggle between font sizes
     */
-   var fontIndex = 0;
-   var fontResize = function (size, type) {
-
-      var fontSize;
-      fontSize = size;
-
-
-
-      // check if size is an array not single size
-      if (typeof fontSize === 'object' && Array.isArray(fontSize)) {
+   var fontSize = 16;
+   var fontResize = function (type) {
 
          /**
          * increase the index and the count if type increase else decrease
-         * @var {fontIndex}
+         * @var {fontSize}
          */
-         type == "increase" ? fontIndex++ : fontIndex--;
+         type == "increase" ? fontSize++ : type === 'default' ? fontSize = 16 : fontSize-- ;
 
-         /**
-          * check  if @counter more than the array itself
-          */
-         if (fontIndex > fontSize.length) {
-            fontIndex = fontSize.length - 1;
-         } else if (fontIndex < 0) {
-            /**
-             * check if index counter less than 0 ex. -1
-             * font index will be first index ex. 0
-             */
-            fontIndex = 0;
-         }
 
-         // html render
-         _$(DOMSelector.html).style.fontSize = fontSize[fontIndex];
-
-      } else if (typeof fontSize === 'string') { // if the font size is just one size
-         /**
-          * check if the user pass a one value so we have to ways
-          * @first type === increase
-          * otherwise the type will be decrease
-          */
-         if (type === 'increase') {
-            /**
-             *
-             * @HTML render
-             */
-            _$(DOMSelector.html).style.fontSize = fontSize;
-
-         } else {
-            /**
-             *
-             * @HTML render
-             */
-            _$(DOMSelector.html).style.fontSize = '100%';
-         }
-      }
+         // html resize font
+         _$(DOMSelector.html).style.fontSize = fontSize + 'px';
    }
 
    var linkUnderline = function (e) {
@@ -359,8 +326,10 @@
       _$(DOMSelector.body).classList.toggle(DOMSelector.underLineClass);
    }
 
-   var headingHighlight = function (style) {
-      _$('head').appendChild(style);
+   var headingHighlight = function (e) {
+      e.preventDefault();
+
+      _$('body').classList.toggle(DOMStrings.highLightHeadingsClass);
    }
 
 
@@ -448,6 +417,7 @@
     * @param {HTMLElement} selector
     */
    var _$ = function (selector) {
+      console.log(selector)
       return document.querySelector(selector);
    }
 
@@ -481,9 +451,9 @@
          throw Error('Invalid Options! Options must be an object');
       }
 
-      if (typeof options.fontSize !== "object" && !Array.isArray(options.fontSize)) {
-         throw Error('Invalid FontSize! FontSize must be an Array');
-      }
+      // if (typeof options.fontSize !== "object" && !Array.isArray(options.fontSize)) {
+      //    throw Error('Invalid FontSize! FontSize must be an Array');
+      // }
       this.options = extendObject(this.options, options);
       /**
        *  GET DEFAULT FONT SIZE TO RESET IN CASE NON SIZES
@@ -558,20 +528,21 @@
 //    }
 // })
 
-// ACC.init('#app', {
-//    fontSize: ['50px', '90px', '100px'],
-//    fontIncrease: true,
-//    fontDecrease: true,
-//    highContrast: false,
-//    negativeContrast: false,
-//    linkUnderLine: false,
-//    highLightLinks: false,
-//    fontReadable: false,
-//    readGuide: false,
-//    letterSpacing: false,
-//    wordSpacing: false,
-//    drag: false
-// })
+ACC.init('#app', {
+   // fontSize: ['50px', '90px', '100px'],
+   fontIncrease: true,
+   // fontDecrease: true,
+   // highContrast: false,
+   // negativeContrast: false,
+   // linkUnderLine: false,
+   highLightLinks: true,
+   highLightHeadings: true,
+   // fontReadable: false,
+   // readGuide: false,
+   // letterSpacing: false,
+   // wordSpacing: false,
+   // drag: false
+})
 
 
 

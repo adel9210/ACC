@@ -1,0 +1,10 @@
+@mixin appendHeadings($num, $className) {
+    $headings: '';
+    @for $i from 1 through $num {
+      $headings: $headings + $className + ' h' + $i + ', ';
+    }
+  
+    #{$headings} {
+      @content;
+    }
+  }

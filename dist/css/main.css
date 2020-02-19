@@ -45,6 +45,12 @@
   margin-bottom: 15px;
 }
 
+.accessibility--toggle {
+  font-size: 24px;
+  color: #083689;
+  cursor: pointer;
+}
+
 .accessibility__item {
   border-bottom: 1px solid #D4DEF1;
   margin-bottom: 15px;
@@ -299,6 +305,10 @@ body.ACC__UNDERLINECLASS a {
 
 .rightPosition-link {
   right: 0px !important;
+}
+
+.hide {
+  display: none;
 }
 
 body.ACC__NIGATIVECONTRAST,
@@ -992,7 +1002,7 @@ body.ACC__HIGHCONTRAST a:link tt,
 body.ACC__HIGHCONTRAST a:link u,
 body.ACC__HIGHCONTRAST a:link var,
 body.ACC__HIGHCONTRAST div#secondaryNav div#documentNavigation ul.navigationTabs li.tabItem {
-  color: #0080ff !important;
+  color: #083689 !important;
 }
 
 body.ACC__HIGHCONTRAST button,
@@ -1054,14 +1064,14 @@ body.ACC__HIGHCONTRAST div#secondaryNav div#documentNavigation ul.navigationTabs
 
 body.ACC__HIGHCONTRAST::-moz-selection,
 body.ACC__HIGHCONTRAST::-moz-selection {
-  background: #4080c0 !important;
-  background-color: #4080c0 !important;
+  background: #083689 !important;
+  background-color: #083689 !important;
 }
 
 body.ACC__HIGHCONTRAST::selection,
 body.ACC__HIGHCONTRAST::-moz-selection {
-  background: #4080c0 !important;
-  background-color: #4080c0 !important;
+  background: #083689 !important;
+  background-color: #083689 !important;
 }
 
 body.ACC__HIGHCONTRAST a.button:hover,
@@ -1154,15 +1164,8 @@ body.ACC__HIGHCONTRAST a:visited:hover strong,
 body.ACC__HIGHCONTRAST a:visited:hover tt,
 body.ACC__HIGHCONTRAST a:visited:hover u,
 body.ACC__HIGHCONTRAST a:visited:hover var {
-  background: #400000 !important;
-  background-color: #400000 !important;
-}
-
-body.ACC__HIGHCONTRAST body > input#site + div#wrapper span.mk,
-body.ACC__HIGHCONTRAST body > input#site + div#wrapper span.mk b,
-body.ACC__HIGHCONTRAST input[type="reset"] {
-  background: #400060 !important;
-  background-color: #400060 !important;
+  background: #171717 !important;
+  background-color: #171717 !important;
 }
 
 body.ACC__HIGHCONTRAST div[role="button"],
@@ -1198,7 +1201,7 @@ body.ACC__HIGHCONTRAST a:link.new,
 body.ACC__HIGHCONTRAST a:link.new i,
 body.ACC__HIGHCONTRAST a:link.new b,
 body.ACC__HIGHCONTRAST span.Apple-style-span {
-  color: #ffff40 !important;
+  color: #FCC016 !important;
 }
 
 body.ACC__HIGHCONTRAST body.mediawiki img.tex {
@@ -1219,8 +1222,8 @@ body.ACC__HIGHCONTRAST table.gssb_c tr.gssb_i a,
 body.ACC__HIGHCONTRAST table.gssb_c tr.gssb_i b,
 body.ACC__HIGHCONTRAST table.gssb_c tr.gssb_i span,
 body.ACC__HIGHCONTRAST table.gssb_c tr.gssb_i td {
-  background: #003050 !important;
-  background-color: #003050 !important;
+  background: #083689 !important;
+  background-color: #083689 !important;
 }
 
 body.ACC__HIGHCONTRAST img[width="18"][height="18"] {
@@ -1260,18 +1263,17 @@ body.ACC__FONTREADABLE *:not(i):not(span) {
 }
 
 body.ACC__HIGHLIGHTLINK a {
-  background-color: #000 !important;
-  color: yellow !important;
+  background-color: #B0D34B !important;
+  color: #171717 !important;
 }
 
-body.ACC__HIGHLIGHTHEADINGS h1,
-body.ACC__HIGHLIGHTHEADINGS h2,
-body.ACC__HIGHLIGHTHEADINGS h3,
-body.ACC__HIGHLIGHTHEADINGS h4,
-body.ACC__HIGHLIGHTHEADINGS h5,
-body.ACC__HIGHLIGHTHEADINGS h6 {
-  background-color: #000 !important;
-  color: yellow !important;
+body.ACC__CURSOR {
+  cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"), auto;
+}
+
+body.ACC__HIGHLIGHTHEADINGS h1, body.ACC__HIGHLIGHTHEADINGS h2, body.ACC__HIGHLIGHTHEADINGS h3, body.ACC__HIGHLIGHTHEADINGS h4, body.ACC__HIGHLIGHTHEADINGS h5, body.ACC__HIGHLIGHTHEADINGS h6 {
+  background-color: #B0D34B !important;
+  color: #171717 !important;
 }
 
 .ACC__LETTERSPACING a,

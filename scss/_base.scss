@@ -43,4 +43,9 @@
         color: $color-grey;
         margin-bottom: 15px;
     }
+    &--toggle {
+        font-size: 24px;
+        color: $color-primary;
+        cursor: pointer;
+    }
 }

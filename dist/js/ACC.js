@@ -25,9 +25,19 @@
       body: 'body',
       head: 'head',
       html: 'html',
+      container: container,
       fontIncrease: container + '.increase',
       fontDecrease: container + '.decrease',
-      fontDefault:  container + '.default',
+      fontDefault: container + '.default',
+      zoomIn: container + '.zoom-in',
+      zoomOut: container + '.zoom-out',
+      rangeSlider: container + '.range-slider',
+      increaseCursor: container + '.cursor',
+      accessability__toggle: '.accessibility--toggle',
+      accessability__close: '.accessibility--close',
+
+      itemBox: 'accessibility__item--box',
+      itemCircle: 'accessibility__item--circle',
 
       accessability__link: '.accessability__link',
       accessability__main: '.accessability__main',
@@ -53,7 +63,8 @@
       highLightLinksClass: 'ACC__HIGHLIGHTLINK',
       highLightHeadingsClass: 'ACC__HIGHLIGHTHEADINGS',
       letterSpacingClass: 'ACC__LETTERSPACING',
-      wordSpacingClass: 'ACC__WORDSPACING'
+      wordSpacingClass: 'ACC__WORDSPACING',
+      cursorClass: 'ACC__CURSOR',
 
    };
 
@@ -202,6 +213,7 @@
          this.on(_$(DOMSelector.highLightLinks), 'click', highLightLinks);
       }
 
+      // HIGHT LIGHT HEADINGS
       if (this.options.highLightHeadings) {
          this.on(_$(DOMSelector.highLightHeadings), 'click', headingHighlight);
       }
@@ -213,21 +225,52 @@
 
       // WORD SPACING
       if (this.options.wordSpacing) {
-         this.on(_$(DOMSelector.wordSpacing), 'click', wordSpacing);
+         this.on(_$(DOMSelector.rangeSlider), 'input', wordSpacing);
       }
+
+      // INCREASE CURSOR
+      if (this.options.increaseCursor) {
+         this.on(_$(DOMSelector.increaseCursor), 'click', increaseCursor);
+      }
+
+      // ZOOMING
+      if (this.options.zooming) {
+         this.on(_$(DOMSelector.zoomIn), 'click', zooming.bind(this, 'in'));
+         this.on(_$(DOMSelector.zoomOut), 'click', zooming.bind(this, 'out'));
+      }
+
       // RESET
       _$(DOMSelector.reset).addEventListener('click', reset);
 
       // MENU TOGGLE FUNCTION
-      // _$(DOMSelector.accessability__link).addEventListener('click', function () {
-      //    _$(DOMSelector.accessability__main).classList.toggle('rightPosition');
-      //    this.classList.toggle('rightPosition-link');
-      // });
+      _$(DOMSelector.accessability__toggle).addEventListener('click', function () {
+         _$(DOMSelector.container).classList.toggle('hide');
+      });
+
+      _$(DOMSelector.accessability__close).addEventListener('click', function () {
+         _$(DOMSelector.container).classList.toggle('hide');
+      });
 
 
+      // ADD CLASS ACTIVE 
+      _$(DOMStrings.container).addEventListener('click', function (e) {
+         // check if container has a group remove all active and select just on
+         if (e.target.parentNode.classList.contains(DOMStrings.itemBox)) {
+            e.target.classList.add('active');
 
+            Array.from(e.target.parentNode.children).forEach(function (ele, i) {
+               if (ele !== e.target) {
+                  ele.classList.remove('active');
+               }
+            })
+         }
 
+         // check if container has just one item 
+         if (e.target.parentNode.classList.contains(DOMStrings.itemCircle)) {
+            e.target.classList.toggle('active');
+         }
 
+      });
 
 
       /////////////////////////////////////////////////////////
@@ -309,15 +352,15 @@
    var fontSize = 16;
    var fontResize = function (type) {
 
-         /**
-         * increase the index and the count if type increase else decrease
-         * @var {fontSize}
-         */
-         type == "increase" ? fontSize++ : type === 'default' ? fontSize = 16 : fontSize-- ;
+      /**
+      * increase the index and the count if type increase else decrease
+      * @var {fontSize}
+      */
+      type == "increase" ? fontSize++ : type === 'default' ? fontSize = 16 : fontSize--;
 
 
-         // html resize font
-         _$(DOMSelector.html).style.fontSize = fontSize + 'px';
+      // html resize font
+      _$(DOMSelector.html).style.fontSize = fontSize + 'px';
    }
 
    var linkUnderline = function (e) {
@@ -332,13 +375,11 @@
       _$('body').classList.toggle(DOMStrings.highLightHeadingsClass);
    }
 
-
    var highLightLinks = function (e) {
       e.preventDefault();
 
       _$('body').classList.toggle(DOMStrings.highLightLinksClass);
    }
-
 
    var readableFont = function (e) {
       e.preventDefault();
@@ -355,8 +396,10 @@
       }
    }
 
-   var increaseCursor = function () {
+   var increaseCursor = function (e) {
+      e.preventDefault();
 
+      _$(DOMSelector.body).classList.toggle(DOMSelector.cursorClass);
    }
 
    var negativeContrast = function (e) {
@@ -380,21 +423,58 @@
    var wordSpacing = function (e) {
       e.preventDefault();
 
-      _$(DOMSelector.body).classList.toggle(DOMSelector.wordSpacingClass);
+      const slider = e.target;
+      const settings = {
+         fill: '#083689',
+         background: '#d7dcdf'
+      }
+
+
+      const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
+      const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
+      slider.style.background = bg;
+
+      _$(DOMSelector.html).style.wordSpacing = slider.value + 'px';
    }
 
    var reset = function (e) {
       e.preventDefault();
 
+      // Reset element with class start with ACC 
       Array.from(_$(DOMSelector.body).classList).forEach(function (ele) {
          if (ele.indexOf('ACC__') > -1) {
             _$(DOMSelector.body).classList.remove(ele);
          }
       });
+
+      // Reset font size to default 
       _$(DOMStrings.html).style.fontSize = ACC.prototype.options.fontSize[0];
+
+      // Reset active classes 
+      Array.from(document.querySelectorAll(DOMSelector.container + '.active')).forEach(function (element) {
+         element.classList.remove('active');
+      });
+
+      // Reset word spacing
+      _$(DOMSelector.html).style.wordSpacing = '0px';
+
+      // Reset zooming
+      _$(DOMSelector.html).style.zoom = '100%';
+
    }
 
+   var zoom = 100;
+   var zooming = function (type) {
 
+      /**
+       * @param {type} in out
+       */
+
+      type === 'in' ? zoom++ : zoom--;
+
+      _$(DOMSelector.html).style.zoom = zoom + '%';
+
+   }
    /// HELPERS FUNCTIONS
 
    /**
@@ -417,7 +497,6 @@
     * @param {HTMLElement} selector
     */
    var _$ = function (selector) {
-      console.log(selector)
       return document.querySelector(selector);
    }
 
@@ -540,8 +619,10 @@ ACC.init('#app', {
    // fontReadable: false,
    // readGuide: false,
    // letterSpacing: false,
-   // wordSpacing: false,
+   wordSpacing: true,
    // drag: false
+   zooming: true,
+   increaseCursor: true
 })
 
 

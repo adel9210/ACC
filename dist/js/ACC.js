@@ -205,6 +205,9 @@ var UICtrl = (function (helpers) {
          // _$(selector).innerHTML = markup.wrapper;
       },
 
+      updateView: function (value) {
+         
+      },
       fontResize: function (type) {
 
          /**
@@ -381,7 +384,7 @@ var itemCtrl = (function () {
       getOptions: function () {
          return data.options;
       },
-      getCurrentValue: function(){
+      getCurrentValue: function () {
          return data.currentValue
       }
    }

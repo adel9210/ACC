@@ -4,10 +4,59 @@
  * Date: 2019-12-20T21:04Z
  * Author: Adel Sadek - Front-end developer at link dev.
  */
+var helpers = (function () {
+   /// HELPERS FUNCTIONS
+
+   /**
+ * Attaches to an internal event.
+ * @protected
+ * @param {HTMLElement} element - The event source.
+ * @param {String} event - The event name.
+ * @param {Function} listener - The event handler to attach.
+ * @param {Boolean} capture - Wether the event should be handled at the capturing phase or not.
+ */
+   var on = function (element, event, listener, capture) {
+      if (element) {
+         if (element.addEventListener) {
+            element.addEventListener(event, listener, capture);
+         } else if (element.attachEvent) {
+            element.attachEvent('on' + event, listener);
+         }
+      }
+   };
+
+   /**
+    * to merge between two objects
+    * @param {object} defaultOptions
+    * @param {object} options
+    */
+   var extendObject = function (defaultOptions, options) {
+      for (var key in defaultOptions) {
+         if (!options.hasOwnProperty(key)) {
+            options[key] = defaultOptions[key];
+         }
+      }
+      // return new object by merge to objects
+      return options;
+   }
 
 
-(function () {
+   /**
+    * @param {HTMLElement} selector
+    */
+   var _$ = function (selector) {
+      return document.querySelector(selector);
+   }
 
+   return {
+      extendObject: extendObject,
+      on: on,
+      _$: _$
+   }
+
+})();
+
+var UI = (function (helpers) {
    "use strict";
 
    /**
@@ -19,8 +68,23 @@
    //////////////////////////////////////////////////////////////////////////
    /////////////////////// VIEW
 
-   var DOMStrings, htmlRender, container
+   var DOMStrings, container, settings, _$, fontSize;
+
+   settings = {
+      fontSize: 16,
+      zoom: 100,
+      spacing: 0,
+      fill: '#083689',
+      background: '#d7dcdf'
+   }
+
+
+   fontSize = settings.fontSize;
+   _$ = helpers._$;
+
+
    container = '#accessibility.accessibility ';
+
    DOMStrings = {
       body: 'body',
       head: 'head',
@@ -68,89 +132,209 @@
 
    };
 
-   htmlRender = function (selector, settings) {
-      var htmlTemplate, itemList, fontIncreaseMarkup, fontDecreaseWrapper, markup;
+   // ADD CLASS ACTIVE 
+   _$(DOMStrings.container).addEventListener('click', function (e) {
+      // check if container has a group remove all active and select just on
+      if (e.target.parentNode.classList.contains(DOMStrings.itemBox)) {
+         e.target.classList.add('active');
 
-      markup = {
-         wrapper: '<nav class="accessability" id="accessability"><div class="ACC__READGUIDELINE"></div><div class="accessability__link" draggable="true" id="dragMe"> <svg class="accessability__link--icon"> <use xlink:href="sprite.svg#icon-accessibility"></use> </svg> </div> <div class="accessability__main"> <h2 class="accessability__title"> Accessibility Tools </h2> <ul class="accessability__items">%items%</ul> </div> </nav>',
-         fontIncrease: '<li class="accessability__item"><a class="accessability__href accessability__href--increase"><svg class="accessability--icon"><use xlink:href="sprite.svg#icon-zoom-in"></use></svg><span class="accessability--text">Increase Text</span></a></li>',
-         fontDecrease: '<li class="accessability__item"> <a class="accessability__href accessability__href--decrease"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-zoom-out"></use> </svg> <span class="accessability--text">Decrease Text</span> </a> </li>',
-         highContrast: '<li class="accessability__item"> <a class="accessability__href accessability__href--high-contrast"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-contrast"></use> </svg> <span class="accessability--text">High Contrast</span> </a> </li>',
-         negativeContrast: '<li class="accessability__item"> <a class="accessability__href accessability__href--negative-contrast"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-eye"></use> </svg> <span class="accessability--text">Negative Contrast</span> </a> </li>',
-         linkUnderLine: '<li class="accessability__item"> <a class="accessability__href accessability__href--underLine"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-link"></use> </svg> <span class="accessability--text">Links Underline</span> </a> </li>',
-         fontReadable: '<li class="accessability__item"> <a class="accessability__href accessability__href--font-readable"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-text-color"></use> </svg> <span class="accessability--text">Readable Font</span> </a> </li>',
-         readGuide: ' <li class="accessability__item"> <a class="accessability__href accessability__href--read-guide"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-align-top"></use> </svg> <span class="accessability--text">Read Guide</span> </a> </li>',
-         readGuideWrapper: '<div class="ACC__READGUIDELINE"></div>',
-         highLightLinks: '<li class="accessability__item"> <a class="accessability__href accessability__href--hight-light-links"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-shuffle"></use> </svg> <span class="accessability--text">High Light Links</span> </a> </li>',
-         letterSpacing: '<li class="accessability__item"> <a class="accessability__href accessability__href--letter-spacing"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-align-horizontal-middle"></use> </svg> <span class="accessability--text">Letter Spacing</span> </a> </li>',
-         wordSpacing: '<li class="accessability__item"> <a class="accessability__href accessability__href--word-spacing"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-align-horizontal-middle"></use> </svg> <span class="accessability--text">Word Spacing</span> </a> </li>',
-         reset: '<li class="accessability__item"> <a class="accessability__href accessability__href--reset"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-reload"></use> </svg> <span class="accessability--text">Reset</span> </a> </li>'
+         Array.from(e.target.parentNode.children).forEach(function (ele, i) {
+            if (ele !== e.target) {
+               ele.classList.remove('active');
+            }
+         })
       }
 
-      itemList = '';
+      // check if container has just one item 
+      if (e.target.parentNode.classList.contains(DOMStrings.itemCircle)) {
+         e.target.classList.toggle('active');
+      }
 
-      for (var key in settings) {
-         if (markup.hasOwnProperty(key) && settings[key] == true) {
-            itemList += markup[key];
+   });
+
+   // MENU TOGGLE FUNCTION
+   _$(DOMStrings.accessability__toggle).addEventListener('click', function () {
+      _$(DOMStrings.container).classList.toggle('hide');
+   });
+
+   _$(DOMStrings.accessability__close).addEventListener('click', function () {
+      _$(DOMStrings.container).classList.toggle('hide');
+   });
+
+
+   return {
+      DOMStrings: function () {
+         return DOMStrings;
+      },
+
+      htmlRender: function (selector, settings) {
+         var itemList, markup;
+
+         markup = {
+            wrapper: '<nav class="accessability" id="accessability"><div class="ACC__READGUIDELINE"></div><div class="accessability__link" draggable="true" id="dragMe"> <svg class="accessability__link--icon"> <use xlink:href="sprite.svg#icon-accessibility"></use> </svg> </div> <div class="accessability__main"> <h2 class="accessability__title"> Accessibility Tools </h2> <ul class="accessability__items">%items%</ul> </div> </nav>',
+            fontIncrease: '<li class="accessability__item"><a class="accessability__href accessability__href--increase"><svg class="accessability--icon"><use xlink:href="sprite.svg#icon-zoom-in"></use></svg><span class="accessability--text">Increase Text</span></a></li>',
+            fontDecrease: '<li class="accessability__item"> <a class="accessability__href accessability__href--decrease"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-zoom-out"></use> </svg> <span class="accessability--text">Decrease Text</span> </a> </li>',
+            highContrast: '<li class="accessability__item"> <a class="accessability__href accessability__href--high-contrast"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-contrast"></use> </svg> <span class="accessability--text">High Contrast</span> </a> </li>',
+            negativeContrast: '<li class="accessability__item"> <a class="accessability__href accessability__href--negative-contrast"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-eye"></use> </svg> <span class="accessability--text">Negative Contrast</span> </a> </li>',
+            linkUnderLine: '<li class="accessability__item"> <a class="accessability__href accessability__href--underLine"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-link"></use> </svg> <span class="accessability--text">Links Underline</span> </a> </li>',
+            fontReadable: '<li class="accessability__item"> <a class="accessability__href accessability__href--font-readable"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-text-color"></use> </svg> <span class="accessability--text">Readable Font</span> </a> </li>',
+            readGuide: ' <li class="accessability__item"> <a class="accessability__href accessability__href--read-guide"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-align-top"></use> </svg> <span class="accessability--text">Read Guide</span> </a> </li>',
+            readGuideWrapper: '<div class="ACC__READGUIDELINE"></div>',
+            highLightLinks: '<li class="accessability__item"> <a class="accessability__href accessability__href--hight-light-links"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-shuffle"></use> </svg> <span class="accessability--text">High Light Links</span> </a> </li>',
+            letterSpacing: '<li class="accessability__item"> <a class="accessability__href accessability__href--letter-spacing"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-align-horizontal-middle"></use> </svg> <span class="accessability--text">Letter Spacing</span> </a> </li>',
+            wordSpacing: '<li class="accessability__item"> <a class="accessability__href accessability__href--word-spacing"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-align-horizontal-middle"></use> </svg> <span class="accessability--text">Word Spacing</span> </a> </li>',
+            reset: '<li class="accessability__item"> <a class="accessability__href accessability__href--reset"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-reload"></use> </svg> <span class="accessability--text">Reset</span> </a> </li>'
          }
+
+         itemList = '';
+
+         for (var key in settings) {
+            if (markup.hasOwnProperty(key) && settings[key] == true) {
+               itemList += markup[key];
+            }
+         }
+
+         // Append Reset
+         // itemList += markup.reset;
+
+         // markup.wrapper = markup.wrapper.replace('%items%', itemList);
+         // _$(selector).innerHTML = markup.wrapper;
+      },
+
+      fontResize: function (type) {
+
+         /**
+         * increase the index and the count if type increase else decrease
+         * @var {fontSize}
+         */
+         type == "increase" ? fontSize++ : type === 'default' ? fontSize = settings.fontSize : fontSize--;
+
+
+         // html resize font
+         _$(DOMStrings.html).style.fontSize = fontSize + 'px';
+      },
+
+      linkUnderline: function (e) {
+         e.preventDefault();
+
+         _$(DOMSelector.body).classList.toggle(DOMSelector.underLineClass);
+      },
+
+      headingHighlight: function (e) {
+         e.preventDefault();
+
+         _$('body').classList.toggle(DOMStrings.highLightHeadingsClass);
+      },
+
+      highLightLinks: function (e) {
+         e.preventDefault();
+
+         _$('body').classList.toggle(DOMStrings.highLightLinksClass);
+      },
+
+      readableFont: function (e) {
+         e.preventDefault();
+
+         _$(DOMSelector.body).classList.toggle(DOMStrings.fontReadableClass)
+      },
+
+      readGuide: function (e) {
+         e.preventDefault();
+
+         _$(DOMStrings.readGuideClass).classList.toggle('show');
+         window.onmousemove = function (e) {
+            _$(DOMSelector.readGuideClass).style.top = e.y + 'px';
+         }
+      },
+
+      increaseCursor: function (e) {
+         e.preventDefault();
+
+         _$(DOMSelector.body).classList.toggle(DOMSelector.cursorClass);
+      },
+
+      negativeContrast: function (e) {
+         e.preventDefault();
+
+         _$(DOMSelector.body).classList.toggle(DOMSelector.negativeContrastClass);
+      },
+
+      highContrast: function (e) {
+         e.preventDefault();
+
+         _$(DOMSelector.body).classList.toggle(DOMSelector.highContrastClass);
+      },
+
+      letterSpacing: function (e) {
+         e.preventDefault();
+
+         _$(DOMSelector.body).classList.toggle(DOMSelector.letterSpacingClass);
+      },
+
+      wordSpacing: function (e) {
+         e.preventDefault();
+
+         const slider = e.target;
+
+         const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
+         const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
+         slider.style.background = bg;
+
+         _$(DOMStrings.html).style.wordSpacing = slider.value + 'px';
+      },
+
+      reset: function (e) {
+         e.preventDefault();
+
+         // Reset element with class start with ACC 
+         Array.from(_$(DOMStrings.body).classList).forEach(function (ele) {
+            if (ele.indexOf('ACC__') > -1) {
+               _$(DOMStrings.body).classList.remove(ele);
+            }
+         });
+
+         // Reset font size to default 
+         _$(DOMStrings.html).style.fontSize = settings.fontSize + 'px';
+
+         // Reset active classes 
+         Array.from(document.querySelectorAll(DOMStrings.container + '.active')).forEach(function (element) {
+            element.classList.remove('active');
+         });
+
+         // Reset word spacing
+         _$(DOMStrings.html).style.wordSpacing = settings.spacing + 'px';
+
+         // Reset zooming
+         _$(DOMStrings.html).style.zoom = settings.zoom + '%';
+
+      },
+
+      zooming: function (type) {
+
+         /**
+          * @param {type} in out
+          */
+
+         type === 'in' ? zoom++ : zoom--;
+
+         _$(DOMStrings.html).style.zoom = zoom + '%';
+
       }
 
-      // Append Reset
-      // itemList += markup.reset;
-
-      // markup.wrapper = markup.wrapper.replace('%items%', itemList);
-      // _$(selector).innerHTML = markup.wrapper;
    }
 
+})(helpers);
 
+var Item = (function () {
 
-
-
-
-
-
-   //////////////////////////////////////////////////////////////////////////
-   /////////////////////// CONTROLLER
-
-
-   // CONSTRUCTOR FUNCTION
-   function ACC() {
-
-   }
-
-
-   /**
-    * Attaches to an internal event.
-    * @protected
-    * @param {HTMLElement} element - The event source.
-    * @param {String} event - The event name.
-    * @param {Function} listener - The event handler to attach.
-    * @param {Boolean} capture - Wether the event should be handled at the capturing phase or not.
-    */
-   ACC.prototype.on = function (element, event, listener, capture) {
-      if (element) {
-         if (element.addEventListener) {
-            element.addEventListener(event, listener, capture);
-         } else if (element.attachEvent) {
-            element.attachEvent('on' + event, listener);
-         }
-      }
-   };
-
-
-   /**
-    * @public
-    */
-   ACC.version = '1.0.0';
 
    /**
    * Default options for the accessability.
    * @public
    */
-   ACC.prototype.options = {
+   var options = {
       fontSize: [],
       readableFont: false,
-
 
       zooming: false,
       letterSpacing: false,
@@ -169,113 +353,111 @@
       drag: false
    }
 
+   return {
+      getOptions: function () {
+         return options;
+      }
+   }
+
+
+})();
+
+var controller = (function (UI, Item, helpers) {
+   "use strict";
+
+
+   //////////////////////////////////////////////////////////////////////////
+   /////////////////////// CONTROLLER
+
+
    // GET DOM SELECTOR
-   var DOMSelector = DOMStrings;
+   var DOMSelector = UI.DOMStrings();
+
+   // on
+   var on = helpers.on;
+
+   // extend object
+   var extendObject = helpers.extendObject;
+
+   // _$
+   var _$ = helpers._$;
+
+   // options - set options when merged.
+   var options;
 
    // SETUP EVENT LISTENER
-   ACC.prototype.setupEventListener = function () {
+   var setupEventListener = function () {
 
-      if (this.options.fontSize) {
+      if (options.fontSize) {
          // FONT RESIZE EVENT
-         this.on(_$(DOMSelector.fontIncrease), 'click', fontResize.bind(null, 'increase'));
-         this.on(_$(DOMSelector.fontDecrease), 'click', fontResize.bind(null, 'decrease'));
-         this.on(_$(DOMSelector.fontDefault), 'click', fontResize.bind(null, 'default'));
+         on(_$(DOMSelector.fontIncrease), 'click', fontResize.bind(null, 'increase'));
+         on(_$(DOMSelector.fontDecrease), 'click', fontResize.bind(null, 'decrease'));
+         on(_$(DOMSelector.fontDefault), 'click', fontResize.bind(null, 'default'));
       }
 
       // LINK UNDERLINE
-      if (this.options.linkUnderLine) {
-         this.on(_$(DOMSelector.fontUnderLine), 'click', linkUnderline);
+      if (options.linkUnderLine) {
+         on(_$(DOMSelector.fontUnderLine), 'click', linkUnderline);
       }
 
       // FONT READABLE
-      if (this.options.fontReadable) {
-         this.on(_$(DOMSelector.fontReadable), 'click', readableFont);
+      if (options.fontReadable) {
+         on(_$(DOMSelector.fontReadable), 'click', readableFont);
       }
 
 
       // NEGATIVE CONTRAST
-      if (this.options.negativeContrast) {
-         this.on(_$(DOMSelector.negativeContrast), 'click', negativeContrast);
+      if (options.negativeContrast) {
+         on(_$(DOMSelector.negativeContrast), 'click', negativeContrast);
       }
 
       // HIGH CONTRAST
-      if (this.options.highContrast) {
-         this.on(_$(DOMSelector.highContrast), 'click', highContrast);
+      if (options.highContrast) {
+         on(_$(DOMSelector.highContrast), 'click', highContrast);
       }
 
       // READ GUIDE LINE
-      if (this.options.readGuide) {
-         this.on(_$(DOMSelector.readGuide), 'click', readGuide);
+      if (options.readGuide) {
+         on(_$(DOMSelector.readGuide), 'click', readGuide);
       }
 
       // HIGHT LIGHT LINKS
-      if (this.options.highLightLinks) {
-         this.on(_$(DOMSelector.highLightLinks), 'click', highLightLinks);
+      if (options.highLightLinks) {
+         on(_$(DOMSelector.highLightLinks), 'click', highLightLinks);
       }
 
       // HIGHT LIGHT HEADINGS
-      if (this.options.highLightHeadings) {
-         this.on(_$(DOMSelector.highLightHeadings), 'click', headingHighlight);
+      if (options.highLightHeadings) {
+         on(_$(DOMSelector.highLightHeadings), 'click', headingHighlight);
       }
 
       // LETTER SPACING
-      if (this.options.letterSpacing) {
-         this.on(_$(DOMSelector.letterSpacing), 'click', letterSpacing);
+      if (options.letterSpacing) {
+         on(_$(DOMSelector.letterSpacing), 'click', letterSpacing);
       }
 
       // WORD SPACING
-      if (this.options.wordSpacing) {
-         this.on(_$(DOMSelector.rangeSlider), 'input', wordSpacing);
+      if (options.wordSpacing) {
+         on(_$(DOMSelector.rangeSlider), 'input', wordSpacing);
       }
 
       // INCREASE CURSOR
-      if (this.options.increaseCursor) {
-         this.on(_$(DOMSelector.increaseCursor), 'click', increaseCursor);
+      if (options.increaseCursor) {
+         on(_$(DOMSelector.increaseCursor), 'click', increaseCursor);
       }
 
       // ZOOMING
-      if (this.options.zooming) {
-         this.on(_$(DOMSelector.zoomIn), 'click', zooming.bind(this, 'in'));
-         this.on(_$(DOMSelector.zoomOut), 'click', zooming.bind(this, 'out'));
+      if (options.zooming) {
+         on(_$(DOMSelector.zoomIn), 'click', zooming.bind(this, 'in'));
+         on(_$(DOMSelector.zoomOut), 'click', zooming.bind(this, 'out'));
       }
 
       // RESET
       _$(DOMSelector.reset).addEventListener('click', reset);
 
-      // MENU TOGGLE FUNCTION
-      _$(DOMSelector.accessability__toggle).addEventListener('click', function () {
-         _$(DOMSelector.container).classList.toggle('hide');
-      });
-
-      _$(DOMSelector.accessability__close).addEventListener('click', function () {
-         _$(DOMSelector.container).classList.toggle('hide');
-      });
-
-
-      // ADD CLASS ACTIVE 
-      _$(DOMStrings.container).addEventListener('click', function (e) {
-         // check if container has a group remove all active and select just on
-         if (e.target.parentNode.classList.contains(DOMStrings.itemBox)) {
-            e.target.classList.add('active');
-
-            Array.from(e.target.parentNode.children).forEach(function (ele, i) {
-               if (ele !== e.target) {
-                  ele.classList.remove('active');
-               }
-            })
-         }
-
-         // check if container has just one item 
-         if (e.target.parentNode.classList.contains(DOMStrings.itemCircle)) {
-            e.target.classList.toggle('active');
-         }
-
-      });
-
-
       /////////////////////////////////////////////////////////
       ///////////////////////////// DRAG AND DROP
-      if (this.options.drag) {
+      if (options.drag) {
 
          // Internet Explorer
          var isIE = /*@cc_on!@*/false || !!document.documentMode;
@@ -317,12 +499,9 @@
 
          element.addEventListener('dragstart', dragStart, false);
 
-         this.on(_$(DOMStrings.body), 'dragover', dragOver, false);
-         this.on(_$(DOMStrings.body), 'drop', drop, false);
+         on(_$(DOMSelector.body), 'dragover', dragOver, false);
+         on(_$(DOMSelector.body), 'drop', drop, false);
       }
-
-
-
 
    }
 
@@ -349,162 +528,78 @@
     * @param {string} size - The font size.
     * @variable {number} fontSize - to handle toggle between font sizes
     */
-   var fontSize = 16;
    var fontResize = function (type) {
-
-      /**
-      * increase the index and the count if type increase else decrease
-      * @var {fontSize}
-      */
-      type == "increase" ? fontSize++ : type === 'default' ? fontSize = 16 : fontSize--;
-
-
-      // html resize font
-      _$(DOMSelector.html).style.fontSize = fontSize + 'px';
+      // update UI
+      UI.fontResize(type);
    }
 
    var linkUnderline = function (e) {
-      e.preventDefault();
-
-      _$(DOMSelector.body).classList.toggle(DOMSelector.underLineClass);
+      // update UI
+      UI.linkUnderline(e);
    }
 
    var headingHighlight = function (e) {
-      e.preventDefault();
-
-      _$('body').classList.toggle(DOMStrings.highLightHeadingsClass);
+      // update UI
+      UI.headingHighlight(e);
    }
 
    var highLightLinks = function (e) {
-      e.preventDefault();
-
-      _$('body').classList.toggle(DOMStrings.highLightLinksClass);
+      // update UI
+      UI.highLightLinks(e);
    }
 
    var readableFont = function (e) {
-      e.preventDefault();
-
-      _$(DOMSelector.body).classList.toggle(DOMStrings.fontReadableClass)
+      // update UI
+      UI.readableFont(e);
    }
 
    var readGuide = function (e) {
-      e.preventDefault();
-
-      _$(DOMStrings.readGuideClass).classList.toggle('show');
-      window.onmousemove = function (e) {
-         _$(DOMSelector.readGuideClass).style.top = e.y + 'px';
-      }
+      // update UI
+      UI.readGuide(e);
    }
 
    var increaseCursor = function (e) {
-      e.preventDefault();
-
-      _$(DOMSelector.body).classList.toggle(DOMSelector.cursorClass);
+      // update UI
+      UI.increaseCursor(e);
    }
 
    var negativeContrast = function (e) {
-      e.preventDefault();
-
-      _$(DOMSelector.body).classList.toggle(DOMSelector.negativeContrastClass);
+      // update UI
+      UI.negativeContrast(e);
    }
 
    var highContrast = function (e) {
-      e.preventDefault();
-
-      _$(DOMSelector.body).classList.toggle(DOMSelector.highContrastClass);
+      // update UI
+      UI.highContrast(e);
    }
 
    var letterSpacing = function (e) {
-      e.preventDefault();
-
-      _$(DOMSelector.body).classList.toggle(DOMSelector.letterSpacingClass);
+      // update UI
+      UI.letterSpacing(e);
    }
 
    var wordSpacing = function (e) {
-      e.preventDefault();
-
-      const slider = e.target;
-      const settings = {
-         fill: '#083689',
-         background: '#d7dcdf'
-      }
-
-
-      const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
-      const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
-      slider.style.background = bg;
-
-      _$(DOMSelector.html).style.wordSpacing = slider.value + 'px';
+      // update UI
+      UI.wordSpacing(e);
    }
 
    var reset = function (e) {
-      e.preventDefault();
-
-      // Reset element with class start with ACC 
-      Array.from(_$(DOMSelector.body).classList).forEach(function (ele) {
-         if (ele.indexOf('ACC__') > -1) {
-            _$(DOMSelector.body).classList.remove(ele);
-         }
-      });
-
-      // Reset font size to default 
-      _$(DOMStrings.html).style.fontSize = ACC.prototype.options.fontSize[0];
-
-      // Reset active classes 
-      Array.from(document.querySelectorAll(DOMSelector.container + '.active')).forEach(function (element) {
-         element.classList.remove('active');
-      });
-
-      // Reset word spacing
-      _$(DOMSelector.html).style.wordSpacing = '0px';
-
-      // Reset zooming
-      _$(DOMSelector.html).style.zoom = '100%';
-
+      // update UI
+      UI.reset(e);
    }
 
-   var zoom = 100;
    var zooming = function (type) {
-
-      /**
-       * @param {type} in out
-       */
-
-      type === 'in' ? zoom++ : zoom--;
-
-      _$(DOMSelector.html).style.zoom = zoom + '%';
+      // update UI
+      UI.zooming(type);
 
    }
-   /// HELPERS FUNCTIONS
 
-   /**
-    * to merge between two objects
-    * @param {object} defaultOptions
-    * @param {object} options
-    */
-   var extendObject = function (defaultOptions, options) {
-      for (var key in defaultOptions) {
-         if (!options.hasOwnProperty(key)) {
-            options[key] = defaultOptions[key];
-         }
-      }
-      // return new object by merge to objects
-      return options;
-   }
-
-
-   /**
-    * @param {HTMLElement} selector
-    */
-   var _$ = function (selector) {
-      return document.querySelector(selector);
-   }
 
    // RENDER THE HTML TEMPLATE FOR ACCESSABILITY TOOL
-   ACC.prototype.initialize = function (selector) {
-      htmlRender(selector, this.options);
+   var initialize = function (selector) {
+      UI.htmlRender(selector, options);
 
-      this.setupEventListener();
+      setupEventListener();
    }
 
 
@@ -512,8 +607,8 @@
    * init the function with passed params.
    * @public
    */
-   ACC.prototype.init = function (selector, options) {
-      var ele, options, elem, defaultSize
+   var init = function (selector, opt) {
+      var ele, optionsdef;
       ele = _$(selector);
 
       // Check if the selector exist in the DOM
@@ -521,38 +616,43 @@
          throw Error('Invalid Selector');
       }
 
+      // GET Options
+      var optionsdef = Item.getOptions();
+
       /**
       * Current options set by the caller including defaults.
       * @public;
       */
-      options = options;
-      if (typeof options !== "object") {
+
+      if (typeof opt !== "object") {
          throw Error('Invalid Options! Options must be an object');
       }
 
       // if (typeof options.fontSize !== "object" && !Array.isArray(options.fontSize)) {
       //    throw Error('Invalid FontSize! FontSize must be an Array');
       // }
-      this.options = extendObject(this.options, options);
+      options = extendObject(optionsdef, opt);
       /**
        *  GET DEFAULT FONT SIZE TO RESET IN CASE NON SIZES
        */
-      elem = _$("html");
-      defaultSize = window.getComputedStyle(elem, null).getPropertyValue("font-size");
+      // elem = _$("html");
+      // defaultSize = window.getComputedStyle(elem, null).getPropertyValue("font-size");
 
       /**
        * APPEND DEFAULT SIZE TO SIZE ARRAY
        */
-      this.options.fontSize.unshift(defaultSize);
+      // this.options.fontSize.unshift(defaultSize);
 
       // Render HTML Template
-      this.initialize(selector);
+      initialize(selector);
    }
 
-   window.ACC = ACC.prototype;
+   window.ACC = {
+      init: init
+   };
 
 
-})();
+})(UI, Item, helpers);
 
 
 // var synth = window.speechSynthesis;

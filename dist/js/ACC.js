@@ -4,7 +4,7 @@
  * Date: 2019-12-20T21:04Z
  * Author: Adel Sadek - Front-end developer at link dev.
  */
-var helpers = (function () {
+var helpersCtrl = (function () {
    /// HELPERS FUNCTIONS
 
    /**
@@ -56,7 +56,7 @@ var helpers = (function () {
 
 })();
 
-var UI = (function (helpers) {
+var UICtrl = (function (helpers) {
    "use strict";
 
    /**
@@ -70,21 +70,20 @@ var UI = (function (helpers) {
 
    var DOMStrings, container, settings, _$, fontSize;
 
-   settings = {
-      fontSize: 16,
-      zoom: 100,
-      spacing: 0,
-      fill: '#083689',
-      background: '#d7dcdf'
-   }
-
-
-   fontSize = settings.fontSize;
-   _$ = helpers._$;
-
-
    container = '#accessibility.accessibility ';
-
+   /*
+      fontResize: true,
+      ContrastTheme: true,
+      highLightLinks: true,
+      highLightHeadings: true,
+      readableFont: true,
+      zooming: true,
+      increaseSpacing: true,
+      readerGuide: true,
+      readSpeaker: true,
+      increaseCursor: true,
+      drag: false
+   */
    DOMStrings = {
       body: 'body',
       head: 'head',
@@ -103,23 +102,15 @@ var UI = (function (helpers) {
       itemBox: 'accessibility__item--box',
       itemCircle: 'accessibility__item--circle',
 
-      accessability__link: '.accessability__link',
-      accessability__main: '.accessability__main',
-      accessability__items: '.accessability__items',
-
       highLightLinks: container + '.highlight-links',
       highLightHeadings: container + '.highlight-headings',
-      fontUnderLine: '.accessability__href--underLine',
       fontReadable: '.accessability__href--font-readable',
       highContrast: '.accessability__href--high-contrast',
       negativeContrast: '.accessability__href--negative-contrast',
-      readGuide: '.accessability__href--read-guide',
-      letterSpacing: '.accessability__href--letter-spacing',
-      wordSpacing: '.accessability__href--word-spacing',
+      readerGuide: '.accessability__href--read-guide',
       reset: '.reset',
 
       // HELPERS CSS CLASSES
-      underLineClass: 'ACC__UNDERLINECLASS',
       negativeContrastClass: 'ACC__NIGATIVECONTRAST',
       highContrastClass: 'ACC__HIGHCONTRAST',
       fontReadableClass: 'ACC__FONTREADABLE',
@@ -131,6 +122,19 @@ var UI = (function (helpers) {
       cursorClass: 'ACC__CURSOR',
 
    };
+
+   settings = {
+      fontSize: 16,
+      zoom: 100,
+      spacing: 0,
+      fill: '#083689',
+      background: '#d7dcdf'
+   };
+
+   fontSize = settings.fontSize;
+
+   _$ = helpers._$;
+
 
    // ADD CLASS ACTIVE 
    _$(DOMStrings.container).addEventListener('click', function (e) {
@@ -214,13 +218,7 @@ var UI = (function (helpers) {
          _$(DOMStrings.html).style.fontSize = fontSize + 'px';
       },
 
-      linkUnderline: function (e) {
-         e.preventDefault();
-
-         _$(DOMSelector.body).classList.toggle(DOMSelector.underLineClass);
-      },
-
-      headingHighlight: function (e) {
+      highLightHeadings: function (e) {
          e.preventDefault();
 
          _$('body').classList.toggle(DOMStrings.highLightHeadingsClass);
@@ -238,7 +236,7 @@ var UI = (function (helpers) {
          _$(DOMSelector.body).classList.toggle(DOMStrings.fontReadableClass)
       },
 
-      readGuide: function (e) {
+      readerGuide: function (e) {
          e.preventDefault();
 
          _$(DOMStrings.readGuideClass).classList.toggle('show');
@@ -250,13 +248,13 @@ var UI = (function (helpers) {
       increaseCursor: function (e) {
          e.preventDefault();
 
-         _$(DOMSelector.body).classList.toggle(DOMSelector.cursorClass);
+         _$(DOMStrings.body).classList.toggle(DOMStrings.cursorClass);
       },
 
       negativeContrast: function (e) {
          e.preventDefault();
 
-         _$(DOMSelector.body).classList.toggle(DOMSelector.negativeContrastClass);
+         _$(DOMStrings.body).classList.toggle(DOMStrings.negativeContrastClass);
       },
 
       highContrast: function (e) {
@@ -265,13 +263,7 @@ var UI = (function (helpers) {
          _$(DOMSelector.body).classList.toggle(DOMSelector.highContrastClass);
       },
 
-      letterSpacing: function (e) {
-         e.preventDefault();
-
-         _$(DOMSelector.body).classList.toggle(DOMSelector.letterSpacingClass);
-      },
-
-      wordSpacing: function (e) {
+      increaseSpacing: function (e) {
          e.preventDefault();
 
          const slider = e.target;
@@ -315,54 +307,89 @@ var UI = (function (helpers) {
           * @param {type} in out
           */
 
-         type === 'in' ? zoom++ : zoom--;
+         type === 'in' ? settings.zoom++ : settings.zoom--;
 
-         _$(DOMStrings.html).style.zoom = zoom + '%';
+         _$(DOMStrings.html).style.zoom = settings.zoom + '%';
 
       }
 
    }
 
-})(helpers);
+})(helpersCtrl);
 
-var Item = (function () {
+var storageCtrl = (function () {
+   var defaultValues = {
+      fontSize: '16px',
+      zooming: '100%',
+      increaseSpacing: '0'
+   }
+
+   return {
+      getACC: function () {
+         let ACC;
+
+         if (localStorage.getItem('ACC') !== null) {
+            ACC = JSON.parse(localStorage.getItem('ACC'));
+         } else {
+            ACC = defaultValues;
+         }
+
+         return ACC;
+      },
+      updateACC: function (obj) {
+         let ACC, ACCString;
+
+         // get items
+         ACC = StorageCtrl.getACC();
+
+         ACC[Object.keys(obj)[0]] = obj[Object.keys(obj)[0]];
+
+         // convert to string
+         ACCString = JSON.stringify(ACC);
+
+         // set ls
+         localStorage.setItem('ACC', ACCString);
+      },
+   }
+})();
+
+var itemCtrl = (function () {
 
 
    /**
    * Default options for the accessability.
    * @public
    */
-   var options = {
-      fontSize: [],
-      readableFont: false,
-
-      zooming: false,
-      letterSpacing: false,
-      wordSpacing: false,
-      increaseCursor: false,
-
-      // CONTROL SHOW AND HIDE ELEMENTS
-      fontIncrease: false,
-      fontDecrease: false,
-      highLightHeadings: false,
-      linkHighlight: false,
-      linkUnderLine: false,
-      highContrast: false,
-      negativeContrast: false,
-      readGuide: false,
-      drag: false
-   }
+   var data = {
+      options: {
+         fontResize: false, // has a value
+         ContrastTheme: false, // boolean
+         highLightLinks: false, // boolean 
+         highLightHeadings: false, // boolean 
+         readableFont: false, // boolean 
+         zooming: false, // has a value
+         increaseSpacing: false, // has a value 
+         readerGuide: false, // boolean 
+         readSpeaker: false, // 
+         increaseCursor: false, // boolean 
+         drag: false // boolean
+      },
+      currentValue: storageCtrl.getACC()
+   };
 
    return {
       getOptions: function () {
-         return options;
+         return data.options;
+      },
+      getCurrentValue: function(){
+         return data.currentValue
       }
    }
 
 
 })();
 
-var controller = (function (UI, Item, helpers) {
+var App = (function (UI, Item, helpers) {
    "use strict";
 
 
@@ -388,37 +415,27 @@ var controller = (function (UI, Item, helpers) {
    // SETUP EVENT LISTENER
    var setupEventListener = function () {
 
-      if (options.fontSize) {
+      if (options.fontResize) {
          // FONT RESIZE EVENT
          on(_$(DOMSelector.fontIncrease), 'click', fontResize.bind(null, 'increase'));
          on(_$(DOMSelector.fontDecrease), 'click', fontResize.bind(null, 'decrease'));
          on(_$(DOMSelector.fontDefault), 'click', fontResize.bind(null, 'default'));
       }
 
-      // LINK UNDERLINE
-      if (options.linkUnderLine) {
-         on(_$(DOMSelector.fontUnderLine), 'click', linkUnderline);
-      }
-
       // FONT READABLE
-      if (options.fontReadable) {
+      if (options.readableFont) {
          on(_$(DOMSelector.fontReadable), 'click', readableFont);
       }
 
-
-      // NEGATIVE CONTRAST
-      if (options.negativeContrast) {
+      // CONTRAST THEME
+      if (options.ContrastTheme) {
          on(_$(DOMSelector.negativeContrast), 'click', negativeContrast);
-      }
-
-      // HIGH CONTRAST
-      if (options.highContrast) {
          on(_$(DOMSelector.highContrast), 'click', highContrast);
       }
 
       // READ GUIDE LINE
-      if (options.readGuide) {
-         on(_$(DOMSelector.readGuide), 'click', readGuide);
+      if (options.readerGuide) {
+         on(_$(DOMSelector.readerGuide), 'click', readerGuide);
       }
 
       // HIGHT LIGHT LINKS
@@ -428,17 +445,12 @@ var controller = (function (UI, Item, helpers) {
 
       // HIGHT LIGHT HEADINGS
       if (options.highLightHeadings) {
-         on(_$(DOMSelector.highLightHeadings), 'click', headingHighlight);
+         on(_$(DOMSelector.highLightHeadings), 'click', highLightHeadings);
       }
 
-      // LETTER SPACING
-      if (options.letterSpacing) {
-         on(_$(DOMSelector.letterSpacing), 'click', letterSpacing);
-      }
-
-      // WORD SPACING
-      if (options.wordSpacing) {
-         on(_$(DOMSelector.rangeSlider), 'input', wordSpacing);
+      // SPACING
+      if (options.increaseSpacing) {
+         on(_$(DOMSelector.rangeSlider), 'input', increaseSpacing);
       }
 
       // INCREASE CURSOR
@@ -452,11 +464,7 @@ var controller = (function (UI, Item, helpers) {
          on(_$(DOMSelector.zoomOut), 'click', zooming.bind(this, 'out'));
       }
 
-      // RESET
-      _$(DOMSelector.reset).addEventListener('click', reset);
-
-      /////////////////////////////////////////////////////////
-      ///////////////////////////// DRAG AND DROP
+      // DRAG AND DROP
       if (options.drag) {
 
          // Internet Explorer
@@ -503,6 +511,8 @@ var controller = (function (UI, Item, helpers) {
          on(_$(DOMSelector.body), 'drop', drop, false);
       }
 
+      // RESET
+      _$(DOMSelector.reset).addEventListener('click', reset);
    }
 
    /** Functionalities
@@ -521,26 +531,14 @@ var controller = (function (UI, Item, helpers) {
 
 
 
-
-   /**
-    * Attaches to an internal event.
-    * @protected
-    * @param {string} size - The font size.
-    * @variable {number} fontSize - to handle toggle between font sizes
-    */
    var fontResize = function (type) {
       // update UI
       UI.fontResize(type);
    }
 
-   var linkUnderline = function (e) {
+   var highLightHeadings = function (e) {
       // update UI
-      UI.linkUnderline(e);
-   }
-
-   var headingHighlight = function (e) {
-      // update UI
-      UI.headingHighlight(e);
+      UI.highLightHeadings(e);
    }
 
    var highLightLinks = function (e) {
@@ -553,7 +551,7 @@ var controller = (function (UI, Item, helpers) {
       UI.readableFont(e);
    }
 
-   var readGuide = function (e) {
+   var readerGuide = function (e) {
       // update UI
       UI.readGuide(e);
    }
@@ -573,14 +571,9 @@ var controller = (function (UI, Item, helpers) {
       UI.highContrast(e);
    }
 
-   var letterSpacing = function (e) {
+   var increaseSpacing = function (e) {
       // update UI
-      UI.letterSpacing(e);
-   }
-
-   var wordSpacing = function (e) {
-      // update UI
-      UI.wordSpacing(e);
+      UI.increaseSpacing(e);
    }
 
    var reset = function (e) {
@@ -595,20 +588,8 @@ var controller = (function (UI, Item, helpers) {
    }
 
 
-   // RENDER THE HTML TEMPLATE FOR ACCESSABILITY TOOL
-   var initialize = function (selector) {
-      UI.htmlRender(selector, options);
-
-      setupEventListener();
-   }
-
-
-   /**
-   * init the function with passed params.
-   * @public
-   */
    var init = function (selector, opt) {
-      var ele, optionsdef;
+      var ele, optionsdef, value;
       ele = _$(selector);
 
       // Check if the selector exist in the DOM
@@ -619,130 +600,43 @@ var controller = (function (UI, Item, helpers) {
       // GET Options
       var optionsdef = Item.getOptions();
 
-      /**
-      * Current options set by the caller including defaults.
-      * @public;
-      */
-
+      // Check if paramter passed isn't an object 
       if (typeof opt !== "object") {
          throw Error('Invalid Options! Options must be an object');
       }
 
-      // if (typeof options.fontSize !== "object" && !Array.isArray(options.fontSize)) {
-      //    throw Error('Invalid FontSize! FontSize must be an Array');
-      // }
+      // merge two objects 
       options = extendObject(optionsdef, opt);
-      /**
-       *  GET DEFAULT FONT SIZE TO RESET IN CASE NON SIZES
-       */
-      // elem = _$("html");
-      // defaultSize = window.getComputedStyle(elem, null).getPropertyValue("font-size");
 
-      /**
-       * APPEND DEFAULT SIZE TO SIZE ARRAY
-       */
-      // this.options.fontSize.unshift(defaultSize);
+      // render html 
+      UI.htmlRender(selector, options);
 
-      // Render HTML Template
-      initialize(selector);
+      // apply saved values from ls 
+      value = Item.getCurrentValue();
+      UI.updateView(value);
+
+      // load event 
+      setupEventListener();
+
    }
 
    window.ACC = {
       init: init
    };
 
+})(UICtrl, itemCtrl, helpersCtrl);
 
-})(UI, Item, helpers);
-
-
-// var synth = window.speechSynthesis;
-// synth.cancel();
-
-// var voices = [];
-
-// function populateVoiceList() {
-//   voices = synth.getVoices().sort(function (a, b) {
-//       const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
-//       if ( aname < bname ) return -1;
-//       else if ( aname == bname ) return 0;
-//       else return +1;
-//   });
-// }
-
-// populateVoiceList();
-// if (speechSynthesis.onvoiceschanged !== undefined) {
-//   speechSynthesis.onvoiceschanged = populateVoiceList;
-// }
-
-// function speak(text){
-//     if (synth.speaking) {
-//         console.error('speechSynthesis.speaking');
-//         return;
-//     }
-//     if (text !== '') {
-//     var utterThis = new SpeechSynthesisUtterance(text);
-//     utterThis.onend = function (event) {
-//         console.log('SpeechSynthesisUtterance.onend');
-//     }
-//     utterThis.onerror = function (event) {
-//         console.error('SpeechSynthesisUtterance.onerror');
-//     }
-//     utterThis.voice = voices[0]
-//     utterThis.pitch = 1;
-//     utterThis.rate = 1;
-//     synth.speak(utterThis);
-//   }
-// }
-
-// let prevTarget = null;
-// document.addEventListener('mouseover', (e)=>{
-//    synth.cancel();
-//    prevTarget ? prevTarget.classList.remove('flashClass') : '';
-
-//    if (e.target.textContent && !synth.speaking && e.target.nodeName !== 'BODY') {
-//       e.target.classList.add('flashClass');
-//       prevTarget = e.target;
-
-//       speak(e.target.textContent.trim());
-//    }
-// })
 
 ACC.init('#app', {
-   // fontSize: ['50px', '90px', '100px'],
-   fontIncrease: true,
-   // fontDecrease: true,
-   // highContrast: false,
-   // negativeContrast: false,
-   // linkUnderLine: false,
+   fontResize: true,
+   ContrastTheme: true,
    highLightLinks: true,
    highLightHeadings: true,
-   // fontReadable: false,
-   // readGuide: false,
-   // letterSpacing: false,
-   wordSpacing: true,
-   // drag: false
+   readableFont: true,
    zooming: true,
-   increaseCursor: true
-})
-
-
-
-// INTERFACES
-
-// export interface ACC {
-//    init(selector: string, options: ACCOptions)
-//  }
-
-//  export interface ACCOptions {
-//    fontSize: string[];
-//    fontIncrease: boolean;
-//    fontDecrease: boolean;
-//    highContrast: boolean;
-//    negativeContrast: boolean;
-//    linkUnderLine: boolean;
-//    highLightLinks: boolean;
-//    fontReadable: boolean;
-//    readGuide: boolean;
-//    letterSpacing: boolean;
-//    wordSpacing: boolean;
-//  }
+   increaseSpacing: true,
+   readerGuide: true,
+   readSpeaker: true,
+   increaseCursor: true,
+   drag: false
+});

@@ -5,7 +5,8 @@
  * Author: Adel Sadek - Front-end developer at link dev.
  */
 var helpersCtrl = (function () {
-   /// HELPERS FUNCTIONS
+  "use strict";
+  var on, extendObject, _$;
 
    /**
  * Attaches to an internal event.
@@ -15,7 +16,7 @@ var helpersCtrl = (function () {
  * @param {Function} listener - The event handler to attach.
  * @param {Boolean} capture - Wether the event should be handled at the capturing phase or not.
  */
-   var on = function (element, event, listener, capture) {
+   on = function (element, event, listener, capture) {
       if (element) {
          if (element.addEventListener) {
             element.addEventListener(event, listener, capture);
@@ -30,7 +31,7 @@ var helpersCtrl = (function () {
     * @param {object} defaultOptions
     * @param {object} options
     */
-   var extendObject = function (defaultOptions, options) {
+   extendObject = function (defaultOptions, options) {
       for (var key in defaultOptions) {
          if (!options.hasOwnProperty(key)) {
             options[key] = defaultOptions[key];
@@ -42,16 +43,18 @@ var helpersCtrl = (function () {
 
 
    /**
+    * return a DOM selector
     * @param {HTMLElement} selector
     */
-   var _$ = function (selector) {
+   _$ = function (selector) {
       return document.querySelector(selector);
    }
+
 
    return {
       extendObject: extendObject,
       on: on,
-      _$: _$
+      _$: _$,
    }
 
 })();
@@ -95,7 +98,9 @@ var UICtrl = (function (helpers) {
       zoomIn: container + '.zoom-in',
       zoomOut: container + '.zoom-out',
       rangeSlider: container + '.range-slider',
+      rangeSliderInput: container + '.range-slider__range',
       increaseCursor: container + '.cursor',
+      saveLocalStorage: container + '.save-preference',
       accessability__toggle: '.accessibility--toggle',
       accessability__close: '.accessibility--close',
 
@@ -204,10 +209,6 @@ var UICtrl = (function (helpers) {
          // markup.wrapper = markup.wrapper.replace('%items%', itemList);
          // _$(selector).innerHTML = markup.wrapper;
       },
-
-      updateView: function (value) {
-         
-      },
       fontResize: function (type) {
 
          /**
@@ -219,93 +220,111 @@ var UICtrl = (function (helpers) {
 
          // html resize font
          _$(DOMStrings.html).style.fontSize = fontSize + 'px';
+
+         return { fontSize: fontSize };
       },
 
-      highLightHeadings: function (e) {
-         e.preventDefault();
+      highLightHeadings: function () {
+         var isActive;
 
-         _$('body').classList.toggle(DOMStrings.highLightHeadingsClass);
+         _$(DOMStrings.body).classList.toggle(DOMStrings.highLightHeadingsClass);
+
+         isActive = _$(DOMStrings.body).classList.contains(DOMStrings.highLightHeadingsClass);
+
+         return {
+            highLightHeadings: isActive
+         }
       },
 
-      highLightLinks: function (e) {
-         e.preventDefault();
+      highLightLinks: function () {
+         var isActive;
 
-         _$('body').classList.toggle(DOMStrings.highLightLinksClass);
+         _$(DOMStrings.body).classList.toggle(DOMStrings.highLightLinksClass);
+
+         isActive = _$(DOMStrings.body).classList.contains(DOMStrings.highLightLinksClass);
+
+         return {
+            highLightLinks: isActive
+         }
       },
 
-      readableFont: function (e) {
-         e.preventDefault();
-
-         _$(DOMSelector.body).classList.toggle(DOMStrings.fontReadableClass)
+      readableFont: function () {
+         _$(DOMSelector.body).classList.toggle(DOMStrings.fontReadableClass);
       },
 
-      readerGuide: function (e) {
-         e.preventDefault();
-
+      readerGuide: function () {
          _$(DOMStrings.readGuideClass).classList.toggle('show');
          window.onmousemove = function (e) {
             _$(DOMSelector.readGuideClass).style.top = e.y + 'px';
          }
       },
 
-      increaseCursor: function (e) {
-         e.preventDefault();
+      increaseCursor: function () {
+         var isActive;
 
          _$(DOMStrings.body).classList.toggle(DOMStrings.cursorClass);
+
+         isActive = _$(DOMStrings.body).classList.contains(DOMStrings.cursorClass);
+
+
+         return {
+            increaseCursor: isActive
+         }
+
       },
 
-      negativeContrast: function (e) {
-         e.preventDefault();
-
+      negativeContrast: function () {
          _$(DOMStrings.body).classList.toggle(DOMStrings.negativeContrastClass);
       },
 
-      highContrast: function (e) {
-         e.preventDefault();
-
+      highContrast: function () {
          _$(DOMSelector.body).classList.toggle(DOMSelector.highContrastClass);
       },
-
-      increaseSpacing: function (e) {
-         e.preventDefault();
-
-         const slider = e.target;
-
+      drawProgress: function () {
+         var slider = _$(DOMStrings.rangeSliderInput);
          const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
          const bg = `linear-gradient(90deg, ${settings.fill} ${percentage}%, ${settings.background} ${percentage + 0.1}%)`;
          slider.style.background = bg;
-
          _$(DOMStrings.html).style.wordSpacing = slider.value + 'px';
-      },
 
-      reset: function (e) {
-         e.preventDefault();
-
-         // Reset element with class start with ACC 
-         Array.from(_$(DOMStrings.body).classList).forEach(function (ele) {
-            if (ele.indexOf('ACC__') > -1) {
-               _$(DOMStrings.body).classList.remove(ele);
-            }
-         });
-
-         // Reset font size to default 
-         _$(DOMStrings.html).style.fontSize = settings.fontSize + 'px';
-
-         // Reset active classes 
-         Array.from(document.querySelectorAll(DOMStrings.container + '.active')).forEach(function (element) {
-            element.classList.remove('active');
-         });
-
-         // Reset word spacing
-         _$(DOMStrings.html).style.wordSpacing = settings.spacing + 'px';
-
-         // Reset zooming
-         _$(DOMStrings.html).style.zoom = settings.zoom + '%';
+         return slider.value;
 
       },
+      increaseSpacing: function () {
+         var value;
 
+         // draw progress 
+         value = this.drawProgress();
+
+
+         return {
+            increaseSpacing: value
+         }
+      },
+      updateView: function (value) {
+         // update fz
+         _$(DOMStrings.html).style.fontSize = value.fontSize + 'px';
+         // update zooming
+         _$(DOMStrings.html).style.zoom = value.zooming + '%';
+         // update spacing 
+         _$(DOMStrings.html).style.wordSpacing = value.increaseSpacing + 'px';
+         _$(DOMStrings.rangeSliderInput).value = value.increaseSpacing * 1;
+
+         // draw progress 
+         this.drawProgress();
+
+
+
+         // update highLight Headings 
+         value.highLightHeadings ? _$(DOMStrings.body).classList.add(DOMStrings.highLightHeadingsClass) : _$(DOMStrings.body).classList.remove(DOMStrings.highLightHeadingsClass);
+         // update highLight Links 
+         value.highLightLinks ? _$(DOMStrings.body).classList.add(DOMStrings.highLightLinksClass) : _$(DOMStrings.body).classList.remove(DOMStrings.highLightLinksClass);
+         // update increase cursor 
+         value.increaseCursor ? _$(DOMStrings.body).classList.add(DOMStrings.cursorClass) : _$(DOMStrings.body).classList.remove(DOMStrings.cursorClass);
+
+
+      },
       zooming: function (type) {
-
          /**
           * @param {type} in out
           */
@@ -314,6 +333,10 @@ var UICtrl = (function (helpers) {
 
          _$(DOMStrings.html).style.zoom = settings.zoom + '%';
 
+         return {
+            zooming: settings.zoom
+         }
+
       }
 
    }
@@ -321,10 +344,24 @@ var UICtrl = (function (helpers) {
 })(helpersCtrl);
 
 var storageCtrl = (function () {
-   var defaultValues = {
-      fontSize: '16px',
-      zooming: '100%',
-      increaseSpacing: '0'
+   "use strict";
+   var ACCValues, defaultVal;
+
+   defaultVal = {
+      fontSize: 16,
+      zooming: 100,
+      increaseSpacing: 0,
+      highLightHeadings: false,
+      highLightLinks: false,
+      readableFont: false,
+      increaseCursor: false
+   }
+
+   if (localStorage.getItem('ACC') == null) {
+      ACCValues = defaultVal
+
+   } else {
+      ACCValues = JSON.parse(localStorage.getItem('ACC'));
    }
 
    return {
@@ -334,29 +371,40 @@ var storageCtrl = (function () {
          if (localStorage.getItem('ACC') !== null) {
             ACC = JSON.parse(localStorage.getItem('ACC'));
          } else {
-            ACC = defaultValues;
+            ACC = ACCValues;
          }
 
          return ACC;
       },
+      getDefault: function () {
+         return defaultVal;
+      },
       updateACC: function (obj) {
-         let ACC, ACCString;
 
-         // get items
-         ACC = StorageCtrl.getACC();
+         ACCValues[Object.keys(obj)[0]] = obj[Object.keys(obj)[0]];
 
-         ACC[Object.keys(obj)[0]] = obj[Object.keys(obj)[0]];
+      },
+      save: function () {
+         var ACCString, ACCObj;
 
          // convert to string
-         ACCString = JSON.stringify(ACC);
+         ACCString = JSON.stringify(ACCValues);
 
          // set ls
          localStorage.setItem('ACC', ACCString);
       },
+      remove: function () {
+         // remove from ls 
+         localStorage.removeItem('ACC');
+
+         // reset default value 
+         ACCValues = defaultVal;
+      }
    }
 })();
 
 var itemCtrl = (function () {
+   "use strict";
 
 
    /**
@@ -365,17 +413,17 @@ var itemCtrl = (function () {
    */
    var data = {
       options: {
-         fontResize: false, // has a value
-         ContrastTheme: false, // boolean
-         highLightLinks: false, // boolean 
-         highLightHeadings: false, // boolean 
-         readableFont: false, // boolean 
-         zooming: false, // has a value
-         increaseSpacing: false, // has a value 
-         readerGuide: false, // boolean 
-         readSpeaker: false, // 
-         increaseCursor: false, // boolean 
-         drag: false // boolean
+         fontResize: false,
+         ContrastTheme: false,
+         highLightLinks: false,
+         highLightHeadings: false,
+         readableFont: false,
+         zooming: false,
+         increaseSpacing: false,
+         readerGuide: false,
+         readSpeaker: false,
+         increaseCursor: false,
+         drag: false
       },
       currentValue: storageCtrl.getACC()
    };
@@ -392,31 +440,27 @@ var itemCtrl = (function () {
 
 })();
 
-var App = (function (UI, Item, helpers) {
+var App = (function (UI, Item, helpers, storage) {
    "use strict";
-
-
-   //////////////////////////////////////////////////////////////////////////
-   /////////////////////// CONTROLLER
-
+   var DOMSelector, on, extendObject, _$, setupEventListener, options;
 
    // GET DOM SELECTOR
-   var DOMSelector = UI.DOMStrings();
+   DOMSelector = UI.DOMStrings();
 
    // on
-   var on = helpers.on;
+   on = helpers.on;
 
    // extend object
-   var extendObject = helpers.extendObject;
+   extendObject = helpers.extendObject;
 
    // _$
-   var _$ = helpers._$;
+   _$ = helpers._$;
 
    // options - set options when merged.
-   var options;
+   options;
 
    // SETUP EVENT LISTENER
-   var setupEventListener = function () {
+   setupEventListener = function () {
 
       if (options.fontResize) {
          // FONT RESIZE EVENT
@@ -516,6 +560,9 @@ var App = (function (UI, Item, helpers) {
 
       // RESET
       _$(DOMSelector.reset).addEventListener('click', reset);
+
+      // Save LocalStorage
+      on(_$(DOMSelector.saveLocalStorage), 'click', ls);
    }
 
    /** Functionalities
@@ -532,67 +579,117 @@ var App = (function (UI, Item, helpers) {
    •	Reset
    */
 
-
-
    var fontResize = function (type) {
+      var fz;
       // update UI
-      UI.fontResize(type);
+      fz = UI.fontResize(type);
+
+      // update ls
+      storage.updateACC(fz)
    }
 
    var highLightHeadings = function (e) {
+      var h;
       // update UI
-      UI.highLightHeadings(e);
+      h = UI.highLightHeadings(e);
+
+      // update ls
+      storage.updateACC(h);
    }
 
    var highLightLinks = function (e) {
+      e.preventDefault();
+
+      var l;
       // update UI
-      UI.highLightLinks(e);
+      l = UI.highLightLinks();
+
+      // update ls
+      storage.updateACC(l);
    }
 
    var readableFont = function (e) {
+      e.preventDefault();
+
       // update UI
-      UI.readableFont(e);
+      UI.readableFont();
    }
 
    var readerGuide = function (e) {
+      e.preventDefault();
+
       // update UI
-      UI.readGuide(e);
+      UI.readGuide();
    }
 
    var increaseCursor = function (e) {
+      e.preventDefault();
+
+      var c;
       // update UI
-      UI.increaseCursor(e);
+      c = UI.increaseCursor();
+
+      // update ls
+      storage.updateACC(c);
    }
 
    var negativeContrast = function (e) {
+      e.preventDefault();
+
       // update UI
       UI.negativeContrast(e);
    }
 
    var highContrast = function (e) {
+      e.preventDefault();
+
       // update UI
-      UI.highContrast(e);
+      UI.highContrast();
    }
 
    var increaseSpacing = function (e) {
-      // update UI
-      UI.increaseSpacing(e);
-   }
+      e.preventDefault();
 
-   var reset = function (e) {
+      var sp;
       // update UI
-      UI.reset(e);
+      sp = UI.increaseSpacing();
+
+      // update ls
+      storage.updateACC(sp);
    }
 
    var zooming = function (type) {
+      var zoom;
       // update UI
-      UI.zooming(type);
+      zoom = UI.zooming(type);
 
+      // update ls 
+      storage.updateACC(zoom);
    }
 
+   var reset = function (e) {
+      e.preventDefault();
+
+      var defaultVal
+
+      // remove from ls 
+      storage.remove();
+
+      // get default value 
+      defaultVal = storage.getDefault();
+
+      // reset UI
+      UI.updateView(defaultVal);
+   }
+
+   var ls = function (e) {
+      e.preventDefault();
+
+      storage.save();
+   }
 
    var init = function (selector, opt) {
-      var ele, optionsdef, value;
+      var ele, optionsDef, value;
       ele = _$(selector);
 
       // Check if the selector exist in the DOM
@@ -601,7 +698,7 @@ var App = (function (UI, Item, helpers) {
       }
 
       // GET Options
-      var optionsdef = Item.getOptions();
+      var optionsDef = Item.getOptions();
 
       // Check if paramter passed isn't an object 
       if (typeof opt !== "object") {
@@ -609,13 +706,13 @@ var App = (function (UI, Item, helpers) {
       }
 
       // merge two objects 
-      options = extendObject(optionsdef, opt);
+      options = extendObject(optionsDef, opt);
 
       // render html 
       UI.htmlRender(selector, options);
 
       // apply saved values from ls 
-      value = Item.getCurrentValue();
+      value = storage.getACC();
       UI.updateView(value);
 
       // load event 
@@ -627,7 +724,7 @@ var App = (function (UI, Item, helpers) {
       init: init
    };
 
-})(UICtrl, itemCtrl, helpersCtrl);
+})(UICtrl, itemCtrl, helpersCtrl, storageCtrl);
 
 
 ACC.init('#app', {

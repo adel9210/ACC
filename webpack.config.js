@@ -3,8 +3,8 @@ const path = require('path');
 module.exports = {
     entry: './dist/js/ACC.js',
     output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist'),
+        filename: 'ACC.min.js',
+        path: path.resolve(__dirname, 'dist/js'),
     },
     module: {
         rules: [
@@ -15,6 +15,19 @@ module.exports = {
                     'css-loader',
                 ],
             },
+            {
+                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'assets/fonts'
+                        }
+                    }
+                ],
+            }
         ],
     },
+    watch: true
 };

@@ -19,7 +19,7 @@
         display: inline-block;
 
         &::first-letter {
-            text-decoration: underline!important;
+            text-decoration: underline !important;
         }
     }
 
@@ -33,7 +33,7 @@
     &--box {
         display: flex;
         font-size: 16px;
-        
+
         .box {
             display: flex;
             align-items: center;
@@ -44,15 +44,14 @@
             width: 42px;
             height: 42px;
             background-color: $color-grey-light;
-            border: 1px solid $color-grey-light-1;
-            border-radius: 5px;
+            border-radius: 7px;
+            overflow: hidden;
+            position: relative;
             cursor: pointer;
-            
-            
+
             &:not(:last-child) {
                 margin-right: 20px;
             }
-
         }
     }
 
@@ -70,7 +69,7 @@
             font-weight: 600;
             width: 42px;
             height: 42px;
-            border: 1px solid $color-grey-light-1;
+            border: 1px solid $color-primary;
             border-radius: 50%;
             cursor: pointer;
         }
@@ -80,11 +79,10 @@
         }
     }
 
-
     & .icon {
         font-size: 16px;
-        font-weight: 400!important;
-        transition: background .4s;
+        font-weight: 400 !important;
+        transition: background 0.4s;
 
         &:hover {
             background-color: $color-primary;
@@ -92,7 +90,8 @@
         }
     }
 
-    &.accessibility__read-speaker,  &.accessibility__reader-guide {
+    &.accessibility__read-speaker,
+    &.accessibility__reader-guide {
         a {
             text-decoration: none;
         }
@@ -105,7 +104,9 @@
     }
 
     &.accessibility__read-speaker {
-        .icon { color: $color-secondary}
+        .icon {
+            color: $color-secondary;
+        }
     }
 
     & .active {
@@ -113,4 +114,41 @@
         color: $color-white;
     }
 
+    &.accessibility__contrast-theme {
+        .theme-primary {
+            background-color: transparent!important;
+            &::after {
+                content: " ";
+                border-bottom: 40px solid $color-primary;
+                border-left: 40px solid transparent;
+                width: 0;
+                position: absolute;
+            }
+            &::before {
+                content: " ";
+                border-top: 40px solid $color-primary-reverse;
+                border-right: 40px solid transparent;
+                width: 0;
+                position: absolute;
+            }
+        }
+
+        .theme-secondary {
+            background-color: transparent!important;
+            &::after {
+                content: " ";
+                border-bottom: 40px solid $color-secondary-reverse;
+                border-left: 40px solid transparent;
+                width: 0;
+                position: absolute;
+            }
+            &::before {
+                content: " ";
+                border-top: 40px solid $color-secondary;
+                border-right: 40px solid transparent;
+                width: 0;
+                position: absolute;
+            }
+        }
+    }
 }

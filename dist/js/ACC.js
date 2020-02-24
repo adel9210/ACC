@@ -1,3 +1,5 @@
+import '../css/main.css';
+
 /*
  * Accessability JavaScript Library v1.0.0
  * LINK DEVELOPMENT CO.
@@ -5,8 +7,8 @@
  * Author: Adel Sadek - Front-end developer at link dev.
  */
 var helpersCtrl = (function () {
-  "use strict";
-  var on, extendObject, _$;
+   "use strict";
+   var on, extendObject, _$;
 
    /**
  * Attaches to an internal event.
@@ -109,16 +111,22 @@ var UICtrl = (function (helpers) {
 
       highLightLinks: container + '.highlight-links',
       highLightHeadings: container + '.highlight-headings',
-      fontReadable: '.accessability__href--font-readable',
+      
+      
+      themePrimary: container + '.theme-primary',
+      themeSecondary: container + '.theme-secondary',
+
+
+      readableFont: '.readable-font',
       highContrast: '.accessability__href--high-contrast',
       negativeContrast: '.accessability__href--negative-contrast',
       readerGuide: '.accessability__href--read-guide',
       reset: '.reset',
 
       // HELPERS CSS CLASSES
-      negativeContrastClass: 'ACC__NIGATIVECONTRAST',
-      highContrastClass: 'ACC__HIGHCONTRAST',
-      fontReadableClass: 'ACC__FONTREADABLE',
+      themePrimaryClass: 'ACC__THEMEPRIMARY',
+      themeSecondaryClass: 'ACC__THEMESECONDARY',
+      readableFontClass: 'ACC__FONTREADABLE',
       readGuideClass: '.ACC__READGUIDELINE',
       highLightLinksClass: 'ACC__HIGHLIGHTLINK',
       highLightHeadingsClass: 'ACC__HIGHLIGHTHEADINGS',
@@ -249,7 +257,17 @@ var UICtrl = (function (helpers) {
       },
 
       readableFont: function () {
-         _$(DOMSelector.body).classList.toggle(DOMStrings.fontReadableClass);
+         var isActive;
+
+         _$(DOMStrings.body).classList.toggle(DOMStrings.readableFontClass);
+
+         isActive = _$(DOMStrings.body).classList.contains(DOMStrings.readableFontClass);
+
+
+         return {
+            readableFont: isActive
+         }
+
       },
 
       readerGuide: function () {
@@ -273,12 +291,14 @@ var UICtrl = (function (helpers) {
 
       },
 
-      negativeContrast: function () {
-         _$(DOMStrings.body).classList.toggle(DOMStrings.negativeContrastClass);
+      themePrimary: function () {
+         _$(DOMStrings.body).classList.remove(DOMStrings.themeSecondaryClass);
+         _$(DOMStrings.body).classList.toggle(DOMStrings.themePrimaryClass);
       },
 
-      highContrast: function () {
-         _$(DOMSelector.body).classList.toggle(DOMSelector.highContrastClass);
+      themeSecondary: function () {
+         _$(DOMStrings.body).classList.remove(DOMStrings.themePrimaryClass);
+         _$(DOMStrings.body).classList.toggle(DOMStrings.themeSecondaryClass);
       },
       drawProgress: function () {
          var slider = _$(DOMStrings.rangeSliderInput);
@@ -288,6 +308,14 @@ var UICtrl = (function (helpers) {
          _$(DOMStrings.html).style.wordSpacing = slider.value + 'px';
 
          return slider.value;
+
+      },
+      toggleClass: function (status, selector, className) {
+         if (status) {
+            _$(selector).classList.add(className);
+         } else {
+            _$(selector).classList.remove(className);
+         }
 
       },
       increaseSpacing: function () {
@@ -316,12 +344,22 @@ var UICtrl = (function (helpers) {
 
 
          // update highLight Headings 
-         value.highLightHeadings ? _$(DOMStrings.body).classList.add(DOMStrings.highLightHeadingsClass) : _$(DOMStrings.body).classList.remove(DOMStrings.highLightHeadingsClass);
-         // update highLight Links 
-         value.highLightLinks ? _$(DOMStrings.body).classList.add(DOMStrings.highLightLinksClass) : _$(DOMStrings.body).classList.remove(DOMStrings.highLightLinksClass);
-         // update increase cursor 
-         value.increaseCursor ? _$(DOMStrings.body).classList.add(DOMStrings.cursorClass) : _$(DOMStrings.body).classList.remove(DOMStrings.cursorClass);
+         this.toggleClass(value.highLightHeadings, DOMStrings.body, DOMStrings.highLightHeadingsClass);
+         this.toggleClass(value.highLightLinks, DOMStrings.body, DOMStrings.highLightLinksClass);
+         this.toggleClass(value.increaseCursor, DOMStrings.body, DOMStrings.cursorClass);
+         this.toggleClass(value.readableFont, DOMStrings.body, DOMStrings.readableFontClass);
 
+         this.toggleClass(value.highLightHeadings, DOMStrings.highLightHeadings, 'active');
+         this.toggleClass(value.highLightLinks, DOMStrings.highLightLinks, 'active');
+         this.toggleClass(value.increaseCursor, DOMStrings.increaseCursor, 'active');
+         this.toggleClass(value.readableFont, DOMStrings.readableFont, 'active');
+
+         this.toggleClass(value.zoomIn, DOMStrings.zoomIn, 'active');
+         this.toggleClass(value.zoomOut, DOMStrings.zoomOut, 'active');
+
+         this.toggleClass(value.FIncrease, DOMStrings.fontIncrease, 'active');
+         this.toggleClass(value.FDecrease, DOMStrings.fontDecrease, 'active');
+         this.toggleClass(value.FDefault, DOMStrings.fontDefault, 'active');
 
       },
       zooming: function (type) {
@@ -387,8 +425,18 @@ var storageCtrl = (function () {
       save: function () {
          var ACCString, ACCObj;
 
+         // check zoom status 
+         ACCValues.zooming >= 100 ? ACCValues.zoomIn = true : ACCValues.zoomIn = false;
+         ACCValues.zooming < 100 ? ACCValues.zoomOut = true : ACCValues.zoomOut = false;
+
+         // check font size 
+         ACCValues.fontSize > 16 ? ACCValues.FIncrease = true : ACCValues.FIncrease = false;
+         ACCValues.fontSize < 16 ? ACCValues.FDecrease = true : ACCValues.FDecrease = false;
+         ACCValues.fontSize == 16 ? ACCValues.FDefault = true : ACCValues.FDefault = false;
+
          // convert to string
          ACCString = JSON.stringify(ACCValues);
+
 
          // set ls
          localStorage.setItem('ACC', ACCString);
@@ -471,13 +519,13 @@ var App = (function (UI, Item, helpers, storage) {
 
       // FONT READABLE
       if (options.readableFont) {
-         on(_$(DOMSelector.fontReadable), 'click', readableFont);
+         on(_$(DOMSelector.readableFont), 'click', readableFont);
       }
 
       // CONTRAST THEME
       if (options.ContrastTheme) {
-         on(_$(DOMSelector.negativeContrast), 'click', negativeContrast);
-         on(_$(DOMSelector.highContrast), 'click', highContrast);
+         on(_$(DOMSelector.themePrimary), 'click', themePrimary);
+         on(_$(DOMSelector.themeSecondary), 'click', themeSecondary);
       }
 
       // READ GUIDE LINE
@@ -504,6 +552,12 @@ var App = (function (UI, Item, helpers, storage) {
       if (options.increaseCursor) {
          on(_$(DOMSelector.increaseCursor), 'click', increaseCursor);
       }
+
+      // Font Readable
+      if (options.fontReadable) {
+         on(_$(DOMSelector.fontReadable), 'click', fontReadable);
+      }
+
 
       // ZOOMING
       if (options.zooming) {
@@ -589,9 +643,11 @@ var App = (function (UI, Item, helpers, storage) {
    }
 
    var highLightHeadings = function (e) {
+      e.preventDefault();
+
       var h;
       // update UI
-      h = UI.highLightHeadings(e);
+      h = UI.highLightHeadings();
 
       // update ls
       storage.updateACC(h);
@@ -610,9 +666,14 @@ var App = (function (UI, Item, helpers, storage) {
 
    var readableFont = function (e) {
       e.preventDefault();
+      var rf;
 
       // update UI
-      UI.readableFont();
+      rf = UI.readableFont();
+
+      console.log(rf);
+      // update ls
+      storage.updateACC(rf);
    }
 
    var readerGuide = function (e) {
@@ -633,18 +694,18 @@ var App = (function (UI, Item, helpers, storage) {
       storage.updateACC(c);
    }
 
-   var negativeContrast = function (e) {
+   var themePrimary = function (e) {
       e.preventDefault();
 
       // update UI
-      UI.negativeContrast(e);
+      UI.themePrimary(e);
    }
 
-   var highContrast = function (e) {
+   var themeSecondary = function (e) {
       e.preventDefault();
 
       // update UI
-      UI.highContrast();
+      UI.themeSecondary();
    }
 
    var increaseSpacing = function (e) {

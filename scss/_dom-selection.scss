@@ -1,6 +1,6 @@
 
 ///////////////////////////////////////////////////
-//////////////////////// NEGATIVE CONTRAST
+//////////////////////// THEME CONTRAST
 
 body.ACC__THEMEPRIMARY,
 body.ACC__THEMEPRIMARY * {
@@ -16,7 +16,7 @@ body.ACC__THEMESECONDARY * {
 
 
 ///////////////////////////////////////////////////////////
-////////////////////////////// READABLE FONT
+////////////////////////  READABLE FONT
 body.ACC__FONTREADABLE,
 body.ACC__FONTREADABLE *:not(i):not(span) {
   font-family: Verdana, Arial, Helvetica, sans-serif !important;
@@ -44,13 +44,13 @@ body.ACC__FONTREADABLE *:not(i):not(span) {
 //////////////////////////////////////////////////////////
 //////////////////////// HIGH LIGHT LINKS
 body.ACC__HIGHLIGHTLINK a {
-  background-color: $color-secondary !important;
-  color: $color-secondary-reverse !important;
+  background-color: $color-secondary-reverse !important;
+  color: $color-secondary !important;
 }
 
 
 ///////////////////////////////////////////////////////////
-/////////////// HIGH CONTRAST
+//////////////////////// CURSOR
 
 body.ACC__CURSOR {
     cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"), auto;
@@ -61,8 +61,8 @@ body.ACC__CURSOR {
 //////////////////////// HIGH LIGHT HEADINGS
 
 @include appendHeadings(6, "body.ACC__HIGHLIGHTHEADINGS") {
-  background-color: $color-secondary !important;
-  color: $color-secondary-reverse !important;
+  background-color: $color-secondary-reverse !important;
+  color: $color-secondary !important;
 }
 
 .hide {

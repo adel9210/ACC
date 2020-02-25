@@ -163,7 +163,7 @@ var UICtrl = (function (helpers) {
       }
 
       // check if container has just one item 
-      if (e.target.parentNode.classList.contains(DOMStrings.itemCircle)) {
+      if (e.target.parentNode.classList.contains(DOMStrings.itemCircle) && e.target.classList.contains('circle')) {
          e.target.classList.toggle('active');
       }
 

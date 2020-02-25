@@ -434,8 +434,8 @@ body.ACC__FONTREADABLE *:not(i):not(span) {
 }
 
 body.ACC__HIGHLIGHTLINK a {
-  background-color: #B0D34B !important;
-  color: #171717 !important;
+  background-color: #171717 !important;
+  color: #B0D34B !important;
 }
 
 body.ACC__CURSOR {
@@ -443,8 +443,8 @@ body.ACC__CURSOR {
 }
 
 body.ACC__HIGHLIGHTHEADINGS h1, body.ACC__HIGHLIGHTHEADINGS h2, body.ACC__HIGHLIGHTHEADINGS h3, body.ACC__HIGHLIGHTHEADINGS h4, body.ACC__HIGHLIGHTHEADINGS h5, body.ACC__HIGHLIGHTHEADINGS h6 {
-  background-color: #B0D34B !important;
-  color: #171717 !important;
+  background-color: #171717 !important;
+  color: #B0D34B !important;
 }
 
 .hide {

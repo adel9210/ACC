@@ -1,0 +1,97 @@
+///////////////////////////////////////////////////
+//////////////////////// NEGATIVE CONTRAST
+
+
+body.ACC__THEMESECONDARY,
+body.ACC__THEMESECONDARY * {
+    background: $color-secondary-reverse !important;
+    color: $color-secondary !important;
+}
+
+body.ACC__THEMESECONDARY {
+    a,
+    b,
+    blockquote,
+    button,
+    canvas,
+    caption,
+    center,
+    cite,
+    code,
+    col,
+    colgroup,
+    dd,
+    details,
+    dfn,
+    dir,
+    div,
+    dl,
+    dt,
+    em,
+    embed,
+    fieldset,
+    figcaption,
+    figure,
+    font,
+    footer,
+    form,
+    header,
+    i,
+    iframe,
+    img,
+    input,
+    kbd,
+    label,
+    legend,
+    li,
+    mark,
+    menu,
+    meter,
+    nav,
+    nobr,
+    object,
+    ol,
+    option,
+    pre,
+    progress,
+    q,
+    s,
+    section,
+    select,
+    small,
+    span,
+    strike,
+    strong,
+    sub,
+    summary,
+    sup,
+    table,
+    td,
+    textarea,
+    th,
+    time,
+    tr,
+    tt,
+    u,
+    ul,
+    var,
+    a span,
+    strong {
+        color: $color-secondary !important;
+        fill: $color-secondary !important;
+    }
+}
+
+body.ACC__THEMESECONDARY {
+    button,
+    input,
+    textarea,
+    select,
+    table,
+    td,
+    th,
+    tr,
+    tt {
+        border: 1px solid #ffffff !important;
+    }
+}

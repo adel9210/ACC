@@ -1,11 +1,22 @@
 import '../css/main.css';
-
 /*
  * Accessability JavaScript Library v1.0.0
  * LINK DEVELOPMENT CO.
  * Date: 2019-12-20T21:04Z
  * Author: Adel Sadek - Front-end developer at link dev.
+ *   Functionalities
+   •	Highlight Links
+   •	Highlight Heading
+   •	Font resize
+   •	Readable font
+   •	Zooming
+   •	Increase Spacing
+   •	Reader Guide
+   •	Read Speaker
+   •	Increase cursor
+   •	Reset
  */
+
 var helpersCtrl = (function () {
    "use strict";
    var on, extendObject, _$;
@@ -111,27 +122,25 @@ var UICtrl = (function (helpers) {
 
       highLightLinks: container + '.highlight-links',
       highLightHeadings: container + '.highlight-headings',
-      
-      
+
+
       themePrimary: container + '.theme-primary',
       themeSecondary: container + '.theme-secondary',
 
 
+      active: 'active',
+
+
       readableFont: '.readable-font',
-      highContrast: '.accessability__href--high-contrast',
-      negativeContrast: '.accessability__href--negative-contrast',
       readerGuide: '.accessability__href--read-guide',
       reset: '.reset',
 
-      // HELPERS CSS CLASSES
       themePrimaryClass: 'ACC__THEMEPRIMARY',
       themeSecondaryClass: 'ACC__THEMESECONDARY',
       readableFontClass: 'ACC__FONTREADABLE',
       readGuideClass: '.ACC__READGUIDELINE',
       highLightLinksClass: 'ACC__HIGHLIGHTLINK',
       highLightHeadingsClass: 'ACC__HIGHLIGHTHEADINGS',
-      letterSpacingClass: 'ACC__LETTERSPACING',
-      wordSpacingClass: 'ACC__WORDSPACING',
       cursorClass: 'ACC__CURSOR',
 
    };
@@ -150,33 +159,35 @@ var UICtrl = (function (helpers) {
 
 
    // ADD CLASS ACTIVE 
-   _$(DOMStrings.container).addEventListener('click', function (e) {
-      // check if container has a group remove all active and select just on
-      if (e.target.parentNode.classList.contains(DOMStrings.itemBox)) {
-         e.target.classList.add('active');
+   window.onload = function () {
+      _$(DOMStrings.container).addEventListener('click', function (e) {
+         // check if container has a group remove all active and select just on
+         if (e.target.parentNode.classList.contains(DOMStrings.itemBox)) {
+            e.target.classList.add(DOMStrings.active);
 
-         Array.from(e.target.parentNode.children).forEach(function (ele, i) {
-            if (ele !== e.target) {
-               ele.classList.remove('active');
-            }
-         })
-      }
+            Array.from(e.target.parentNode.children).forEach(function (ele, i) {
+               if (ele !== e.target) {
+                  ele.classList.remove(DOMStrings.active);
+               }
+            })
+         }
 
-      // check if container has just one item 
-      if (e.target.parentNode.classList.contains(DOMStrings.itemCircle) && e.target.classList.contains('circle')) {
-         e.target.classList.toggle('active');
-      }
+         // check if container has just one item 
+         if (e.target.parentNode.classList.contains(DOMStrings.itemCircle) && e.target.classList.contains('circle')) {
+            e.target.classList.toggle(DOMStrings.active);
+         }
 
-   });
+      });
+      // MENU TOGGLE FUNCTION
+      // _$(DOMStrings.accessability__toggle).addEventListener('click', function () {
+      //    _$(DOMStrings.container).classList.toggle('hide');
+      // });
 
-   // MENU TOGGLE FUNCTION
-   _$(DOMStrings.accessability__toggle).addEventListener('click', function () {
-      _$(DOMStrings.container).classList.toggle('hide');
-   });
+      // _$(DOMStrings.accessability__close).addEventListener('click', function () {
+      //    _$(DOMStrings.container).classList.toggle('hide');
+      // });
+   }
 
-   _$(DOMStrings.accessability__close).addEventListener('click', function () {
-      _$(DOMStrings.container).classList.toggle('hide');
-   });
 
 
    return {
@@ -188,19 +199,18 @@ var UICtrl = (function (helpers) {
          var itemList, markup;
 
          markup = {
-            wrapper: '<nav class="accessability" id="accessability"><div class="ACC__READGUIDELINE"></div><div class="accessability__link" draggable="true" id="dragMe"> <svg class="accessability__link--icon"> <use xlink:href="sprite.svg#icon-accessibility"></use> </svg> </div> <div class="accessability__main"> <h2 class="accessability__title"> Accessibility Tools </h2> <ul class="accessability__items">%items%</ul> </div> </nav>',
-            fontIncrease: '<li class="accessability__item"><a class="accessability__href accessability__href--increase"><svg class="accessability--icon"><use xlink:href="sprite.svg#icon-zoom-in"></use></svg><span class="accessability--text">Increase Text</span></a></li>',
-            fontDecrease: '<li class="accessability__item"> <a class="accessability__href accessability__href--decrease"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-zoom-out"></use> </svg> <span class="accessability--text">Decrease Text</span> </a> </li>',
-            highContrast: '<li class="accessability__item"> <a class="accessability__href accessability__href--high-contrast"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-contrast"></use> </svg> <span class="accessability--text">High Contrast</span> </a> </li>',
-            negativeContrast: '<li class="accessability__item"> <a class="accessability__href accessability__href--negative-contrast"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-eye"></use> </svg> <span class="accessability--text">Negative Contrast</span> </a> </li>',
-            linkUnderLine: '<li class="accessability__item"> <a class="accessability__href accessability__href--underLine"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-link"></use> </svg> <span class="accessability--text">Links Underline</span> </a> </li>',
-            fontReadable: '<li class="accessability__item"> <a class="accessability__href accessability__href--font-readable"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-text-color"></use> </svg> <span class="accessability--text">Readable Font</span> </a> </li>',
-            readGuide: ' <li class="accessability__item"> <a class="accessability__href accessability__href--read-guide"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-align-top"></use> </svg> <span class="accessability--text">Read Guide</span> </a> </li>',
-            readGuideWrapper: '<div class="ACC__READGUIDELINE"></div>',
-            highLightLinks: '<li class="accessability__item"> <a class="accessability__href accessability__href--hight-light-links"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-shuffle"></use> </svg> <span class="accessability--text">High Light Links</span> </a> </li>',
-            letterSpacing: '<li class="accessability__item"> <a class="accessability__href accessability__href--letter-spacing"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-align-horizontal-middle"></use> </svg> <span class="accessability--text">Letter Spacing</span> </a> </li>',
-            wordSpacing: '<li class="accessability__item"> <a class="accessability__href accessability__href--word-spacing"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-align-horizontal-middle"></use> </svg> <span class="accessability--text">Word Spacing</span> </a> </li>',
-            reset: '<li class="accessability__item"> <a class="accessability__href accessability__href--reset"> <svg class="accessability--icon"> <use xlink:href="sprite.svg#icon-reload"></use> </svg> <span class="accessability--text">Reset</span> </a> </li>'
+            wrapper: '<section id="accessibility" class="accessibility"> <span class="icon icon-close accessibility--close"></span> <h2 class="accessibility__heading">Accessibility tool Panel</h2> %items% </section>',
+            fontResize: '<div class="accessibility__item accessibility__font-resize"> <h3 class="accessibility__item--heading">Font Resize</h3> <div class="accessibility__item--box"> <div class="box increase">A+</div> <div class="box default">A</div> <div class="box decrease">A-</div> </div> </div>',
+            ContrastTheme: '<div class="accessibility__item accessibility__contrast-theme"> <h3 class="accessibility__item--heading">Contrast Theme</h3> <div class="accessibility__item--box"> <div class="box theme-primary"></div> <div class="box theme-secondary"></div> </div> </div>',
+            highLightLinks: '<div class="accessibility__item accessibility__highlight-links"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Highlight Links</h3> <span class="icon icon-think-1 circle highlight-links"></span> </div> </div>',
+            highLightHeadings: '<div class="accessibility__item accessibility__highlight-heading"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Highlight Heading</h3> <span class="icon icon-think circle highlight-headings"></span> </div> </div>',
+            readableFont: '<div class="accessibility__item accessibility__readable-font"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Readable Font</h3> <span class="icon icon-font circle readable-font"></span> </div> </div>',
+            zooming: '<div class="accessibility__item accessibility__zooming"> <h3 class="accessibility__item--heading">Zooming</h3> <div class="accessibility__item--box"> <span class="icon icon-zoom-in box zoom-in"></span> <span class="icon icon-zoom-out box zoom-out"></span> </div> </div>',
+            increaseSpacing: ' <div class="accessibility__item accessibility__increase-spacing"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Increase Spacing</h3> <div class="range-slider"> <input class="range-slider__range" type="range" value="0" min="0" max="20"> </div> </div> </div>',
+            readerGuide: '<div class="accessibility__item accessibility__reader-guide"> <h3 class="accessibility__item--heading">Reader Guide</h3> <span class="icon icon-pdf"></span> <a href="#" class="accessibility__item--heading-1"> Our Reader Manual Guide.pdf</a> </div>',
+            readSpeaker: ' <div class="accessibility__item accessibility__read-speaker"> <h3 class="accessibility__item--heading">Read Speaker</h3> <span class="icon icon-play"></span> <a href="" class="accessibility__item--heading-2"> Start </a> </div>',
+            increaseCursor: ' <div class="accessibility__item accessibility__increase-cursor"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Increase cursor</h3> <span class="icon icon-click circle cursor"></span> </div> </div>',
+            buttons: '<div class="accessibility__buttons"> <button class="save-preference">Save Preference</button> <a href="" class="reset">Reset</a> </div>'
          }
 
          itemList = '';
@@ -212,10 +222,10 @@ var UICtrl = (function (helpers) {
          }
 
          // Append Reset
-         // itemList += markup.reset;
+         itemList += markup.buttons;
 
-         // markup.wrapper = markup.wrapper.replace('%items%', itemList);
-         // _$(selector).innerHTML = markup.wrapper;
+         markup.wrapper = markup.wrapper.replace('%items%', itemList);
+         _$(selector).innerHTML = markup.wrapper;
       },
       fontResize: function (type) {
 
@@ -292,13 +302,30 @@ var UICtrl = (function (helpers) {
       },
 
       themePrimary: function () {
+         var isActive;
+
          _$(DOMStrings.body).classList.remove(DOMStrings.themeSecondaryClass);
          _$(DOMStrings.body).classList.toggle(DOMStrings.themePrimaryClass);
+
+         isActive = _$(DOMStrings.body).classList.contains(DOMStrings.themePrimaryClass);
+
+         return {
+            themePrimary: isActive
+         }
+
       },
 
       themeSecondary: function () {
+         var isActive;
+
          _$(DOMStrings.body).classList.remove(DOMStrings.themePrimaryClass);
          _$(DOMStrings.body).classList.toggle(DOMStrings.themeSecondaryClass);
+
+         isActive = _$(DOMStrings.body).classList.contains(DOMStrings.themeSecondaryClass);
+
+         return {
+            themeSecondary: isActive
+         }
       },
       drawProgress: function () {
          var slider = _$(DOMStrings.rangeSliderInput);
@@ -329,38 +356,24 @@ var UICtrl = (function (helpers) {
             increaseSpacing: value
          }
       },
-      updateView: function (value) {
+      updateView: function () {
          // update fz
-         _$(DOMStrings.html).style.fontSize = value.fontSize + 'px';
+         _$(DOMStrings.html).style.fontSize = settings.fontSize;
          // update zooming
-         _$(DOMStrings.html).style.zoom = value.zooming + '%';
-         // update spacing 
-         _$(DOMStrings.html).style.wordSpacing = value.increaseSpacing + 'px';
-         _$(DOMStrings.rangeSliderInput).value = value.increaseSpacing * 1;
+         _$(DOMStrings.html).style.zoom = settings.zoom + '%';
 
-         // draw progress 
+         // update spacing 
+         _$(DOMStrings.html).style.wordSpacing = settings.spacing;
+         _$(DOMStrings.rangeSliderInput).value = settings.spacing;
          this.drawProgress();
 
 
-
-         // update highLight Headings 
-         this.toggleClass(value.highLightHeadings, DOMStrings.body, DOMStrings.highLightHeadingsClass);
-         this.toggleClass(value.highLightLinks, DOMStrings.body, DOMStrings.highLightLinksClass);
-         this.toggleClass(value.increaseCursor, DOMStrings.body, DOMStrings.cursorClass);
-         this.toggleClass(value.readableFont, DOMStrings.body, DOMStrings.readableFontClass);
-
-         this.toggleClass(value.highLightHeadings, DOMStrings.highLightHeadings, 'active');
-         this.toggleClass(value.highLightLinks, DOMStrings.highLightLinks, 'active');
-         this.toggleClass(value.increaseCursor, DOMStrings.increaseCursor, 'active');
-         this.toggleClass(value.readableFont, DOMStrings.readableFont, 'active');
-
-         this.toggleClass(value.zoomIn, DOMStrings.zoomIn, 'active');
-         this.toggleClass(value.zoomOut, DOMStrings.zoomOut, 'active');
-
-         this.toggleClass(value.FIncrease, DOMStrings.fontIncrease, 'active');
-         this.toggleClass(value.FDecrease, DOMStrings.fontDecrease, 'active');
-         this.toggleClass(value.FDefault, DOMStrings.fontDefault, 'active');
-
+         // Remove Classes
+         Array.from(_$(DOMStrings.body).classList).map(function (cls) {
+            if (cls.indexOf('ACC') > -1) {
+               _$(DOMStrings.body).classList.remove(cls);
+            }
+         });
       },
       zooming: function (type) {
          /**
@@ -392,7 +405,14 @@ var storageCtrl = (function () {
       highLightHeadings: false,
       highLightLinks: false,
       readableFont: false,
-      increaseCursor: false
+      increaseCursor: false,
+      zoomIn: false,
+      zoomOut: false,
+      FIncrease: false,
+      FDecrease: false,
+      FDefault: false,
+      themePrimary: false,
+      themeSecondary: false
    }
 
    if (localStorage.getItem('ACC') == null) {
@@ -423,7 +443,7 @@ var storageCtrl = (function () {
 
       },
       save: function () {
-         var ACCString, ACCObj;
+         var ACCString;
 
          // check zoom status 
          ACCValues.zooming >= 100 ? ACCValues.zoomIn = true : ACCValues.zoomIn = false;
@@ -434,9 +454,9 @@ var storageCtrl = (function () {
          ACCValues.fontSize < 16 ? ACCValues.FDecrease = true : ACCValues.FDecrease = false;
          ACCValues.fontSize == 16 ? ACCValues.FDefault = true : ACCValues.FDefault = false;
 
+
          // convert to string
          ACCString = JSON.stringify(ACCValues);
-
 
          // set ls
          localStorage.setItem('ACC', ACCString);
@@ -453,7 +473,6 @@ var storageCtrl = (function () {
 
 var itemCtrl = (function () {
    "use strict";
-
 
    /**
    * Default options for the accessability.
@@ -508,24 +527,38 @@ var App = (function (UI, Item, helpers, storage) {
    options;
 
    // SETUP EVENT LISTENER
-   setupEventListener = function () {
-
+   setupEventListener = function (value) {
       if (options.fontResize) {
          // FONT RESIZE EVENT
          on(_$(DOMSelector.fontIncrease), 'click', fontResize.bind(null, 'increase'));
          on(_$(DOMSelector.fontDecrease), 'click', fontResize.bind(null, 'decrease'));
          on(_$(DOMSelector.fontDefault), 'click', fontResize.bind(null, 'default'));
+
+         // update FZ
+         _$(DOMSelector.html).style.fontSize = value.fontSize + 'px';
+         UI.toggleClass(value.FIncrease, DOMSelector.fontIncrease, DOMSelector.active);
+         UI.toggleClass(value.FDecrease, DOMSelector.fontDecrease, DOMSelector.active);
+         UI.toggleClass(value.FDefault, DOMSelector.fontDefault, DOMSelector.active);
       }
 
       // FONT READABLE
       if (options.readableFont) {
          on(_$(DOMSelector.readableFont), 'click', readableFont);
+
+         // update font family
+         UI.toggleClass(value.readableFont, DOMSelector.readableFont, DOMSelector.active);
+         UI.toggleClass(value.readableFont, DOMSelector.body, DOMSelector.readableFontClass);
       }
 
       // CONTRAST THEME
       if (options.ContrastTheme) {
          on(_$(DOMSelector.themePrimary), 'click', themePrimary);
          on(_$(DOMSelector.themeSecondary), 'click', themeSecondary);
+
+         // update contrast
+         UI.toggleClass(value.themePrimary, DOMSelector.body, DOMSelector.themePrimaryClass);
+         UI.toggleClass(value.themeSecondary, DOMSelector.body, DOMSelector.themeSecondaryClass);
+
       }
 
       // READ GUIDE LINE
@@ -536,33 +569,50 @@ var App = (function (UI, Item, helpers, storage) {
       // HIGHT LIGHT LINKS
       if (options.highLightLinks) {
          on(_$(DOMSelector.highLightLinks), 'click', highLightLinks);
+
+         // update High Light Links
+         UI.toggleClass(value.highLightLinks, DOMSelector.highLightLinks, DOMSelector.active);
+         UI.toggleClass(value.highLightLinks, DOMSelector.body, DOMSelector.highLightLinksClass);
+
       }
 
       // HIGHT LIGHT HEADINGS
       if (options.highLightHeadings) {
          on(_$(DOMSelector.highLightHeadings), 'click', highLightHeadings);
+
+         // update HIGHT LIGHT
+         UI.toggleClass(value.highLightHeadings, DOMSelector.highLightHeadings, DOMSelector.active);
+         UI.toggleClass(value.highLightHeadings, DOMSelector.body, DOMSelector.highLightHeadingsClass);
       }
 
       // SPACING
       if (options.increaseSpacing) {
          on(_$(DOMSelector.rangeSlider), 'input', increaseSpacing);
+
+         // // update spacing 
+         _$(DOMSelector.html).style.wordSpacing = value.increaseSpacing + 'px';
+         _$(DOMSelector.rangeSliderInput).value = value.increaseSpacing * 1;
+         UI.drawProgress();
       }
 
       // INCREASE CURSOR
       if (options.increaseCursor) {
          on(_$(DOMSelector.increaseCursor), 'click', increaseCursor);
-      }
 
-      // Font Readable
-      if (options.fontReadable) {
-         on(_$(DOMSelector.fontReadable), 'click', fontReadable);
+         // update cursor  
+         UI.toggleClass(value.increaseCursor, DOMSelector.increaseCursor, DOMSelector.active);
+         UI.toggleClass(value.increaseCursor, DOMSelector.body, DOMSelector.cursorClass);
       }
-
 
       // ZOOMING
       if (options.zooming) {
          on(_$(DOMSelector.zoomIn), 'click', zooming.bind(this, 'in'));
          on(_$(DOMSelector.zoomOut), 'click', zooming.bind(this, 'out'));
+
+         // update zooming
+         _$(DOMSelector.html).style.zoom = value.zooming + '%';
+         UI.toggleClass(value.zoomIn, DOMSelector.zoomIn, DOMSelector.active);
+         UI.toggleClass(value.zoomOut, DOMSelector.zoomOut, DOMSelector.active);
       }
 
       // DRAG AND DROP
@@ -619,19 +669,6 @@ var App = (function (UI, Item, helpers, storage) {
       on(_$(DOMSelector.saveLocalStorage), 'click', ls);
    }
 
-   /** Functionalities
- 
-   •	Highlight Links
-   •	Highlight Heading
-   •	Font resize
-   •	Readable font
-   •	Zooming
-   •	Increase Spacing
-   •	Reader Guide
-   •	Read Speaker
-   •	Increase cursor
-   •	Reset
-   */
 
    var fontResize = function (type) {
       var fz;
@@ -671,7 +708,6 @@ var App = (function (UI, Item, helpers, storage) {
       // update UI
       rf = UI.readableFont();
 
-      console.log(rf);
       // update ls
       storage.updateACC(rf);
    }
@@ -697,21 +733,39 @@ var App = (function (UI, Item, helpers, storage) {
    var themePrimary = function (e) {
       e.preventDefault();
 
+      var tp, status;
+
       // update UI
-      UI.themePrimary(e);
+      tp = UI.themePrimary(e);
+
+      // toggle first theme
+      status = tp.themePrimary === true ? false : false;
+      storage.updateACC({themeSecondary: status});
+
+      // update ls
+      storage.updateACC(tp);
    }
 
    var themeSecondary = function (e) {
       e.preventDefault();
+      var ts, status;
 
       // update UI
-      UI.themeSecondary();
+      ts = UI.themeSecondary();
+
+      // toggle second theme
+      status = ts.themeSecondary === true ? false : false;
+      storage.updateACC({themePrimary: status});
+
+      // update ls
+      storage.updateACC(ts);
    }
 
    var increaseSpacing = function (e) {
       e.preventDefault();
 
       var sp;
+
       // update UI
       sp = UI.increaseSpacing();
 
@@ -774,10 +828,9 @@ var App = (function (UI, Item, helpers, storage) {
 
       // apply saved values from ls 
       value = storage.getACC();
-      UI.updateView(value);
 
       // load event 
-      setupEventListener();
+      setupEventListener(value);
 
    }
 
@@ -786,6 +839,7 @@ var App = (function (UI, Item, helpers, storage) {
    };
 
 })(UICtrl, itemCtrl, helpersCtrl, storageCtrl);
+
 
 
 ACC.init('#app', {
@@ -800,4 +854,4 @@ ACC.init('#app', {
    readSpeaker: true,
    increaseCursor: true,
    drag: false
-});
+})

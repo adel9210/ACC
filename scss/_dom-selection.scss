@@ -1,70 +1,55 @@
-
-///////////////////////////////////////////////////
-//////////////////////// THEME CONTRAST
-
-body.ACC__THEMEPRIMARY,
-body.ACC__THEMEPRIMARY * {
-  background: $color-primary !important;
-  color: $color-primary-reverse !important;
-}
-
-body.ACC__THEMESECONDARY,
-body.ACC__THEMESECONDARY * {
-  background: $color-secondary-reverse !important;
-  color: $color-secondary !important;
-}
+@import './theme/theme-primary';
+@import './theme/theme-secondary';
 
 
 ///////////////////////////////////////////////////////////
 ////////////////////////  READABLE FONT
 body.ACC__FONTREADABLE,
 body.ACC__FONTREADABLE *:not(i):not(span) {
-  font-family: Verdana, Arial, Helvetica, sans-serif !important;
+    font-family: Verdana, Arial, Helvetica, sans-serif !important;
 }
 
 ////////////////////////////////////////////////////////////
 //////////////////////// READ GUIDE LINE
 .ACC__READGUIDELINE {
-  position: fixed;
-  width: 100%;
-  background: #000;
-  height: 5px;
-  border-top: 2px solid #ff0;
-  border-bottom: 2px solid #ff0;
-  top: 50%;
-  z-index: 99999;
-  display: none;
-  left: 0;
+    position: fixed;
+    width: 100%;
+    background: #000;
+    height: 5px;
+    border-top: 2px solid #ff0;
+    border-bottom: 2px solid #ff0;
+    top: 50%;
+    z-index: 99999;
+    display: none;
+    left: 0;
 }
 
 .ACC__READGUIDELINE.show {
-  display: block;
+    display: block;
 }
 
 //////////////////////////////////////////////////////////
 //////////////////////// HIGH LIGHT LINKS
 body.ACC__HIGHLIGHTLINK a {
-  background-color: $color-secondary-reverse !important;
-  color: $color-secondary !important;
+    background-color: $color-secondary-reverse !important;
+    color: $color-secondary !important;
 }
-
 
 ///////////////////////////////////////////////////////////
 //////////////////////// CURSOR
 
 body.ACC__CURSOR {
     cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"), auto;
-    
 }
 
 //////////////////////////////////////////////////////////
 //////////////////////// HIGH LIGHT HEADINGS
 
 @include appendHeadings(6, "body.ACC__HIGHLIGHTHEADINGS") {
-  background-color: $color-secondary-reverse !important;
-  color: $color-secondary !important;
+    background-color: $color-secondary-reverse !important;
+    color: $color-secondary !important;
 }
 
 .hide {
-  display: none;
+    display: none;
 }

@@ -5,8 +5,8 @@
         display: block;
         width: 100%;
         border: 0;
-        background-color: $color-primary;
-        color: #fff;
+        background-color: $color-primary!important;
+        color: $color-white!important;
         height: 34px;
         border-radius: 5px;
         margin-bottom: 5px;
@@ -14,7 +14,9 @@
     }
 
     .reset {
-        color: red;
+        color: red!important;
+        // background-color: $color-white!important;
+        // background: $color-white!important;
         display: block;
         text-decoration: none;
         

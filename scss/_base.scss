@@ -1,9 +1,8 @@
 /////////////////////////////////////////////////////
 ///////////////////// ACCESSIBILITY CONTAINER
-.accessibility {
-
+#accessibility.accessibility {
     // RESET
-    &  *,
+    & *,
     & *::after,
     & *::before {
         margin: 0;
@@ -17,36 +16,36 @@
         -ms-user-select: none; /* IE10+ */
     }
 
-
-    font-family:'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     font-weight: 400;
     width: 280px;
     padding: 15px 18.5px 25px 19.5px;
     box-shadow: 0px 2px 5px #ccc;
     word-spacing: 0;
+    // background: $color-white !important;
+    // background-color: $color-white !important;
 
-    &--close {
+    // &  div {
+    //     background: $color-white !important;
+    //     background-color: $color-white !important;
+    // }
+
+    .accessibility--close {
         display: block;
-        color: $color-grey-light-1;
+        color: $color-grey-light-1 !important;
         font-size: 24px;
         margin-bottom: 15px;
         cursor: pointer;
-        transition: color .4s;
+        transition: color 0.4s;
 
         &:hover {
-            color: $color-grey;
+            color: $color-grey !important;
         }
     }
 
-    &__heading {
-        font-size: 17px;
-        font-weight: 700;
-        color: $color-grey;
-        margin-bottom: 15px;
-    }
-    &--toggle {
+    .accessibility--toggle {
         font-size: 24px;
-        color: $color-primary;
+        color: $color-primary !important;
         cursor: pointer;
     }
 }

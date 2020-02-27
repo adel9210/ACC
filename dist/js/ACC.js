@@ -132,13 +132,13 @@ var UICtrl = (function (helpers) {
 
 
       readableFont: '.readable-font',
-      readerGuide: '.accessability__href--read-guide',
+      readerGuide: container + '.reader',
       reset: '.reset',
 
       themePrimaryClass: 'ACC__THEMEPRIMARY',
       themeSecondaryClass: 'ACC__THEMESECONDARY',
       readableFontClass: 'ACC__FONTREADABLE',
-      readGuideClass: '.ACC__READGUIDELINE',
+      readerGuideClass: '.ACC__READGUIDELINE',
       highLightLinksClass: 'ACC__HIGHLIGHTLINK',
       highLightHeadingsClass: 'ACC__HIGHLIGHTHEADINGS',
       cursorClass: 'ACC__CURSOR',
@@ -147,6 +147,7 @@ var UICtrl = (function (helpers) {
 
    settings = {
       fontSize: 16,
+      fontSteps: [18, 20],
       zoom: 100,
       spacing: 0,
       fill: '#083689',
@@ -199,15 +200,16 @@ var UICtrl = (function (helpers) {
          var itemList, markup;
 
          markup = {
-            wrapper: '<section id="accessibility" class="accessibility"> <span class="icon icon-close accessibility--close"></span> <h2 class="accessibility__heading">Accessibility tool Panel</h2> %items% </section>',
-            fontResize: '<div class="accessibility__item accessibility__font-resize"> <h3 class="accessibility__item--heading">Font Resize</h3> <div class="accessibility__item--box"> <div class="box increase">A+</div> <div class="box default">A</div> <div class="box decrease">A-</div> </div> </div>',
+            wrapper: '<section id="accessibility" draggable="true" class="accessibility"> <span class="icon icon-close accessibility--close"></span> <h2 class="accessibility__heading">Accessibility tool Panel</h2> %items% </section>',
+            fontResize: ' <div class="accessibility__item accessibility__font-resize"> <h3 class="accessibility__item--heading">Font Resize</h3> <div class="accessibility__item--box"> <div class="box increase">A++</div> <div class="box decrease">A+</div> <div class="box default">A</div> </div> </div>',
             ContrastTheme: '<div class="accessibility__item accessibility__contrast-theme"> <h3 class="accessibility__item--heading">Contrast Theme</h3> <div class="accessibility__item--box"> <div class="box theme-primary"></div> <div class="box theme-secondary"></div> </div> </div>',
-            highLightLinks: '<div class="accessibility__item accessibility__highlight-links"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Highlight Links</h3> <span class="icon icon-think-1 circle highlight-links"></span> </div> </div>',
+            highLightLinks: '<div class="accessibility__item accessibility__highlight-links"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Highlight Links</h3> <span class="icon icon-link circle highlight-links"></span> </div> </div>',
             highLightHeadings: '<div class="accessibility__item accessibility__highlight-heading"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Highlight Heading</h3> <span class="icon icon-think circle highlight-headings"></span> </div> </div>',
             readableFont: '<div class="accessibility__item accessibility__readable-font"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Readable Font</h3> <span class="icon icon-font circle readable-font"></span> </div> </div>',
             zooming: '<div class="accessibility__item accessibility__zooming"> <h3 class="accessibility__item--heading">Zooming</h3> <div class="accessibility__item--box"> <span class="icon icon-zoom-in box zoom-in"></span> <span class="icon icon-zoom-out box zoom-out"></span> </div> </div>',
-            increaseSpacing: ' <div class="accessibility__item accessibility__increase-spacing"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Increase Spacing</h3> <div class="range-slider"> <input class="range-slider__range" type="range" value="0" min="0" max="20"> </div> </div> </div>',
-            readerGuide: '<div class="accessibility__item accessibility__reader-guide"> <h3 class="accessibility__item--heading">Reader Guide</h3> <span class="icon icon-pdf"></span> <a href="#" class="accessibility__item--heading-1"> Our Reader Manual Guide.pdf</a> </div>',
+            increaseSpacing: ' <div class="accessibility__item accessibility__increase-spacing"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Increase Spacing</h3> <div class="range-slider"> <input class="range-slider__range" type="range" value="0" min="0" max="10"> </div> </div> </div>',
+            readerGuide: ' <div class="accessibility__item accessibility__reader-guide"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Reader Guide</h3> <span class="icon icon-underline circle reader"></span> </div></div>',
+            readerGuideEle: '<div class="ACC__READGUIDELINE"></div>', 
             readSpeaker: ' <div class="accessibility__item accessibility__read-speaker"> <h3 class="accessibility__item--heading">Read Speaker</h3> <span class="icon icon-play"></span> <a href="" class="accessibility__item--heading-2"> Start </a> </div>',
             increaseCursor: ' <div class="accessibility__item accessibility__increase-cursor"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Increase cursor</h3> <span class="icon icon-click circle cursor"></span> </div> </div>',
             buttons: '<div class="accessibility__buttons"> <button class="save-preference">Save Preference</button> <a href="" class="reset">Reset</a> </div>'
@@ -224,6 +226,9 @@ var UICtrl = (function (helpers) {
          // Append Reset
          itemList += markup.buttons;
 
+         // append reader guide 
+         itemList += markup.readerGuideEle;
+
          markup.wrapper = markup.wrapper.replace('%items%', itemList);
          _$(selector).innerHTML = markup.wrapper;
       },
@@ -233,7 +238,7 @@ var UICtrl = (function (helpers) {
          * increase the index and the count if type increase else decrease
          * @var {fontSize}
          */
-         type == "increase" ? fontSize++ : type === 'default' ? fontSize = settings.fontSize : fontSize--;
+         type == "increase" ? fontSize = settings.fontSteps[1] : type === 'default' ? fontSize = settings.fontSize : fontSize = settings.fontSteps[0];
 
 
          // html resize font
@@ -281,9 +286,17 @@ var UICtrl = (function (helpers) {
       },
 
       readerGuide: function () {
-         _$(DOMStrings.readGuideClass).classList.toggle('show');
+         var isActive;
+
+         _$(DOMStrings.readerGuideClass).classList.toggle('show');
          window.onmousemove = function (e) {
-            _$(DOMSelector.readGuideClass).style.top = e.y + 'px';
+            _$(DOMStrings.readerGuideClass).style.top = e.y + 'px';
+         }
+
+         isActive = _$(DOMStrings.readerGuideClass).classList.contains('show');
+
+         return {
+            readerGuide: isActive
          }
       },
 
@@ -357,8 +370,9 @@ var UICtrl = (function (helpers) {
          }
       },
       updateView: function () {
+         console.log(settings)
          // update fz
-         _$(DOMStrings.html).style.fontSize = settings.fontSize;
+         _$(DOMStrings.html).style.fontSize = settings.fontSize + 'px';
          // update zooming
          _$(DOMStrings.html).style.zoom = settings.zoom + '%';
 
@@ -379,13 +393,16 @@ var UICtrl = (function (helpers) {
          /**
           * @param {type} in out
           */
+         var zoom;
 
-         type === 'in' ? settings.zoom++ : settings.zoom--;
+         zoom = settings.zoom;
 
-         _$(DOMStrings.html).style.zoom = settings.zoom + '%';
+         type === 'in' ? zoom++ : zoom--;
+
+         _$(DOMStrings.html).style.zoom = zoom + '%';
 
          return {
-            zooming: settings.zoom
+            zooming: zoom
          }
 
       }
@@ -467,6 +484,9 @@ var storageCtrl = (function () {
 
          // reset default value 
          ACCValues = defaultVal;
+
+         return ACCValues;
+
       }
    }
 })();
@@ -627,10 +647,11 @@ var App = (function (UI, Item, helpers, storage) {
 
          var dragStart, dragOver, drop, element, offset, wrapper, style
 
-         element = _$('#dragMe');
-         wrapper = _$('.accessability__main');
+         element = _$('#accessibility');
+         wrapper = _$(DOMSelector.container);
 
          dragStart = function (event) {
+            console.log(event)
             style = window.getComputedStyle(event.target, null);
 
             event.dataTransfer.setData("text/plain", (parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
@@ -642,6 +663,8 @@ var App = (function (UI, Item, helpers, storage) {
          }
 
          drop = function (event) {
+            // console.log(event.clientX)
+
             offset = event.dataTransfer.getData("text/plain").split(',');
 
             element.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
@@ -649,8 +672,8 @@ var App = (function (UI, Item, helpers, storage) {
 
 
 
-            wrapper.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
-            wrapper.style.left = (event.clientX + parseInt(offset[0], 10) + 70) + 'px';
+            // wrapper.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
+            // wrapper.style.left = (event.clientX + parseInt(offset[0], 10) + 70) + 'px';
 
             event.preventDefault();
             return false;
@@ -715,8 +738,13 @@ var App = (function (UI, Item, helpers, storage) {
    var readerGuide = function (e) {
       e.preventDefault();
 
+      var rg;
+
       // update UI
-      UI.readGuide();
+      rg = UI.readerGuide();
+
+      // update ls
+      storage.updateACC(rg);
    }
 
    var increaseCursor = function (e) {
@@ -740,7 +768,7 @@ var App = (function (UI, Item, helpers, storage) {
 
       // toggle first theme
       status = tp.themePrimary === true ? false : false;
-      storage.updateACC({themeSecondary: status});
+      storage.updateACC({ themeSecondary: status });
 
       // update ls
       storage.updateACC(tp);
@@ -755,7 +783,7 @@ var App = (function (UI, Item, helpers, storage) {
 
       // toggle second theme
       status = ts.themeSecondary === true ? false : false;
-      storage.updateACC({themePrimary: status});
+      storage.updateACC({ themePrimary: status });
 
       // update ls
       storage.updateACC(ts);
@@ -788,10 +816,7 @@ var App = (function (UI, Item, helpers, storage) {
       var defaultVal
 
       // remove from ls 
-      storage.remove();
-
-      // get default value 
-      defaultVal = storage.getDefault();
+      defaultVal = storage.remove();
 
       // reset UI
       UI.updateView(defaultVal);
@@ -853,5 +878,5 @@ ACC.init('#app', {
    readerGuide: true,
    readSpeaker: true,
    increaseCursor: true,
-   drag: false
+   drag: true
 })

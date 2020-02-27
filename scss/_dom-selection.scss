@@ -6,12 +6,13 @@
 ////////////////////////  READABLE FONT
 body.ACC__FONTREADABLE,
 body.ACC__FONTREADABLE *:not(i):not(span) {
-    font-family: Verdana, Arial, Helvetica, sans-serif !important;
+    font-family: Tahoma, sans-serif !important;
 }
 
 ////////////////////////////////////////////////////////////
 //////////////////////// READ GUIDE LINE
 .ACC__READGUIDELINE {
+    content: "";
     position: fixed;
     width: 100%;
     background: #000;
@@ -19,9 +20,9 @@ body.ACC__FONTREADABLE *:not(i):not(span) {
     border-top: 2px solid #ff0;
     border-bottom: 2px solid #ff0;
     top: 50%;
-    z-index: 99999;
-    display: none;
+    z-index: -1;
     left: 0;
+    display: none;
 }
 
 .ACC__READGUIDELINE.show {

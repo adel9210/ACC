@@ -95,3 +95,9 @@ body.ACC__THEMESECONDARY {
         border: 1px solid #ffffff !important;
     }
 }
+
+body.ACC__THEMESECONDARY {
+    button {
+        background-color: $color-secondary!important;
+    }
+}

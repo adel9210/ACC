@@ -60,7 +60,11 @@ var helpersCtrl = (function () {
     * @param {HTMLElement} selector
     */
    _$ = function (selector) {
-      return document.querySelector(selector);
+      var element, returnedElement;
+      element = document.querySelectorAll(selector);
+      returnedElement = element.length > 1 ? element : element[0];
+
+      return returnedElement;
    }
 
 
@@ -129,6 +133,7 @@ var UICtrl = (function (helpers) {
 
 
       active: 'active',
+      activeClass: container + '.active',
 
 
       readableFont: '.readable-font',
@@ -164,18 +169,31 @@ var UICtrl = (function (helpers) {
       _$(DOMStrings.container).addEventListener('click', function (e) {
          // check if container has a group remove all active and select just on
          if (e.target.parentNode.classList.contains(DOMStrings.itemBox)) {
+            // add active class
             e.target.classList.add(DOMStrings.active);
+
+            // enable save button 
+            UICtrl.enableSaveButton();
 
             Array.from(e.target.parentNode.children).forEach(function (ele, i) {
                if (ele !== e.target) {
-                  ele.classList.remove(DOMStrings.active);
+
+               // enable save button 
+               UICtrl.enableSaveButton();
+
+               // remove active class 
+               ele.classList.remove(DOMStrings.active);
                }
             })
          }
 
          // check if container has just one item 
          if (e.target.parentNode.classList.contains(DOMStrings.itemCircle) && e.target.classList.contains('circle')) {
+            // add active class
             e.target.classList.toggle(DOMStrings.active);
+
+            // enable save button 
+            UICtrl.enableSaveButton();
          }
 
       });
@@ -200,7 +218,7 @@ var UICtrl = (function (helpers) {
          var itemList, markup;
 
          markup = {
-            wrapper: '<section id="accessibility" draggable="true" class="accessibility"> <span class="icon icon-close accessibility--close"></span> <h2 class="accessibility__heading">Accessibility tool Panel</h2> %items% </section>',
+            wrapper: '<section id="accessibility" draggable="true" class="accessibility"><span class="icon icon-close accessibility--close"></span> <h2 class="accessibility__heading">Accessibility tool Panel</h2> %items% </section>',
             fontResize: ' <div class="accessibility__item accessibility__font-resize"> <h3 class="accessibility__item--heading">Font Resize</h3> <div class="accessibility__item--box"> <div class="box increase">A++</div> <div class="box decrease">A+</div> <div class="box default">A</div> </div> </div>',
             ContrastTheme: '<div class="accessibility__item accessibility__contrast-theme"> <h3 class="accessibility__item--heading">Contrast Theme</h3> <div class="accessibility__item--box"> <div class="box theme-primary"></div> <div class="box theme-secondary"></div> </div> </div>',
             highLightLinks: '<div class="accessibility__item accessibility__highlight-links"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Highlight Links</h3> <span class="icon icon-link circle highlight-links"></span> </div> </div>',
@@ -209,10 +227,10 @@ var UICtrl = (function (helpers) {
             zooming: '<div class="accessibility__item accessibility__zooming"> <h3 class="accessibility__item--heading">Zooming</h3> <div class="accessibility__item--box"> <span class="icon icon-zoom-in box zoom-in"></span> <span class="icon icon-zoom-out box zoom-out"></span> </div> </div>',
             increaseSpacing: ' <div class="accessibility__item accessibility__increase-spacing"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Increase Spacing</h3> <div class="range-slider"> <input class="range-slider__range" type="range" value="0" min="0" max="10"> </div> </div> </div>',
             readerGuide: ' <div class="accessibility__item accessibility__reader-guide"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Reader Guide</h3> <span class="icon icon-underline circle reader"></span> </div></div>',
-            readerGuideEle: '<div class="ACC__READGUIDELINE"></div>', 
+            readerGuideEle: '<div class="ACC__READGUIDELINE"></div>',
             readSpeaker: ' <div class="accessibility__item accessibility__read-speaker"> <h3 class="accessibility__item--heading">Read Speaker</h3> <span class="icon icon-play"></span> <a href="" class="accessibility__item--heading-2"> Start </a> </div>',
             increaseCursor: ' <div class="accessibility__item accessibility__increase-cursor"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Increase cursor</h3> <span class="icon icon-click circle cursor"></span> </div> </div>',
-            buttons: '<div class="accessibility__buttons"> <button class="save-preference">Save Preference</button> <a href="" class="reset">Reset</a> </div>'
+            buttons: '<div class="accessibility__buttons"> <button class="save-preference" disabled="disabled">Save Preference</button> <a href="" class="reset">Reset</a> </div>'
          }
 
          itemList = '';
@@ -340,6 +358,7 @@ var UICtrl = (function (helpers) {
             themeSecondary: isActive
          }
       },
+
       drawProgress: function () {
          var slider = _$(DOMStrings.rangeSliderInput);
          const percentage = 100 * (slider.value - slider.min) / (slider.max - slider.min);
@@ -350,6 +369,7 @@ var UICtrl = (function (helpers) {
          return slider.value;
 
       },
+
       toggleClass: function (status, selector, className) {
          if (status) {
             _$(selector).classList.add(className);
@@ -358,6 +378,7 @@ var UICtrl = (function (helpers) {
          }
 
       },
+
       increaseSpacing: function () {
          var value;
 
@@ -369,8 +390,8 @@ var UICtrl = (function (helpers) {
             increaseSpacing: value
          }
       },
+
       updateView: function () {
-         console.log(settings)
          // update fz
          _$(DOMStrings.html).style.fontSize = settings.fontSize + 'px';
          // update zooming
@@ -382,13 +403,26 @@ var UICtrl = (function (helpers) {
          this.drawProgress();
 
 
-         // Remove Classes
+         // Remove Classes from the body
          Array.from(_$(DOMStrings.body).classList).map(function (cls) {
             if (cls.indexOf('ACC') > -1) {
                _$(DOMStrings.body).classList.remove(cls);
             }
          });
+
+         // Remove Active classes from the elements 
+         if (_$(DOMStrings.activeClass)) {
+
+            if (_$(DOMStrings.activeClass).length > 1) {
+               Array.from(_$(DOMStrings.activeClass)).map(function (ele) {
+                  ele.classList.remove(DOMStrings.active);
+               });
+               return;
+            }
+            _$(DOMStrings.activeClass).classList.remove(DOMStrings.active);
+         }
       },
+
       zooming: function (type) {
          /**
           * @param {type} in out
@@ -405,6 +439,12 @@ var UICtrl = (function (helpers) {
             zooming: zoom
          }
 
+      },
+      disableSaveButton: function () {
+         _$(DOMStrings.saveLocalStorage).setAttribute('disabled', 'disabled');
+      },
+      enableSaveButton: function () {
+         _$(DOMStrings.saveLocalStorage).removeAttribute('disabled');
       }
 
    }
@@ -651,7 +691,6 @@ var App = (function (UI, Item, helpers, storage) {
          wrapper = _$(DOMSelector.container);
 
          dragStart = function (event) {
-            console.log(event)
             style = window.getComputedStyle(event.target, null);
 
             event.dataTransfer.setData("text/plain", (parseInt(style.getPropertyValue("left"), 10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
@@ -794,6 +833,9 @@ var App = (function (UI, Item, helpers, storage) {
 
       var sp;
 
+      // enable save button 
+      UI.enableSaveButton();
+
       // update UI
       sp = UI.increaseSpacing();
 
@@ -820,12 +862,20 @@ var App = (function (UI, Item, helpers, storage) {
 
       // reset UI
       UI.updateView(defaultVal);
+
+
+      // enable save button 
+      // UI.toggleSaveButton();
    }
 
    var ls = function (e) {
       e.preventDefault();
 
+      // save ls
       storage.save();
+
+      // disable save button 
+      UI.disableSaveButton();
    }
 
    var init = function (selector, opt) {

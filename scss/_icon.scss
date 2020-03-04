@@ -1,17 +1,17 @@
 @font-face {
   font-family: 'ACC';
-  src:  url('../fonts/ACC.eot?l2vz2u');
-  src:  url('../fonts/ACC.eot?l2vz2u#iefix') format('embedded-opentype'),
-    url('../fonts/ACC.ttf?l2vz2u') format('truetype'),
-    url('../fonts/ACC.woff?l2vz2u') format('woff'),
-    url('../fonts/ACC.svg?l2vz2u#ACC') format('svg');
+  src:  url('../fonts/ACC.eot?p09n9n');
+  src:  url('../fonts/ACC.eot?p09n9n#iefix') format('embedded-opentype'),
+    url('../fonts/ACC.ttf?p09n9n') format('truetype'),
+    url('../fonts/ACC.woff?p09n9n') format('woff'),
+    url('../fonts/ACC.svg?p09n9n#ACC') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
 [class^="icon-"], [class*=" icon-"] {
-  /* use !important to prevent issues with browser extensions that change fonts */
+  /* use !important to prevent issues with browser extensions that change ../fonts */
   font-family: 'ACC' !important;
   speak: none;
   font-style: normal;
@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-drag:before {
+  content: "\e90c";
+}
 .icon-underline:before {
   content: "\e90b";
 }

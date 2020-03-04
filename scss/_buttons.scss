@@ -6,24 +6,29 @@
         width: 100%;
         border: 0;
         background-color: $color-primary;
-        color: $color-white!important;
+        color: $color-white !important;
         height: 34px;
         border-radius: 5px;
         margin-bottom: 5px;
         cursor: pointer;
         font-size: 15px;
+
+        &:disabled {
+            cursor: not-allowed;
+            background-color: $color-grey-light-1;
+        }
     }
 
     .reset {
-        color: red!important;
+        color: red !important;
         // background-color: $color-white!important;
         // background: $color-white!important;
         display: block;
         text-decoration: none;
         font-size: 15px;
-        
+
         &::first-letter {
             text-decoration: underline;
         }
     }
-} 
+}

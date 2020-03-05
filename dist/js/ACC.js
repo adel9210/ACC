@@ -49,6 +49,23 @@ var helpersCtrl = (function () {
          if (!options.hasOwnProperty(key)) {
             options[key] = defaultOptions[key];
          }
+         if (options.hasOwnProperty(key) && Array.isArray(options[key])) {
+            // theme=[]
+            if (!options[key].length) {
+               console.log('Case 1')
+               options[key] = defaultOptions[key]
+            }
+
+            // theme [1]
+            if (options[key].length === 1) {
+               console.log('Case 2')
+
+               var index = options[key][0].type === 'primary' ? 1 : 0;
+               console.log(index)
+               options[key].push(defaultOptions[key][index])
+            }
+
+         }
       }
       // return new object by merge to objects
       return options;
@@ -153,6 +170,8 @@ var UICtrl = (function (helpers) {
    settings = {
       fontSize: 16,
       fontSteps: [18, 20],
+      zoomSteps: [100, 125, 150, 200],
+      zoomCurrentStep: 0,
       zoom: 100,
       spacing: 0,
       fill: '#083689',
@@ -178,11 +197,11 @@ var UICtrl = (function (helpers) {
             Array.from(e.target.parentNode.children).forEach(function (ele, i) {
                if (ele !== e.target) {
 
-               // enable save button 
-               UICtrl.enableSaveButton();
+                  // enable save button 
+                  UICtrl.enableSaveButton();
 
-               // remove active class 
-               ele.classList.remove(DOMStrings.active);
+                  // remove active class 
+                  ele.classList.remove(DOMStrings.active);
                }
             })
          }
@@ -218,7 +237,7 @@ var UICtrl = (function (helpers) {
          var itemList, markup;
 
          markup = {
-            wrapper: '<section id="accessibility" draggable="true" class="accessibility"><span class="icon icon-close accessibility--close"></span> <h2 class="accessibility__heading">Accessibility tool Panel</h2> %items% </section>',
+            wrapper: '<section id="accessibility" class="accessibility"><span class="icon icon-close accessibility--close"></span> <h2 class="accessibility__heading">Accessibility tool Panel</h2> %items% </section>',
             fontResize: ' <div class="accessibility__item accessibility__font-resize"> <h3 class="accessibility__item--heading">Font Resize</h3> <div class="accessibility__item--box"> <div class="box increase">A++</div> <div class="box decrease">A+</div> <div class="box default">A</div> </div> </div>',
             ContrastTheme: '<div class="accessibility__item accessibility__contrast-theme"> <h3 class="accessibility__item--heading">Contrast Theme</h3> <div class="accessibility__item--box"> <div class="box theme-primary"></div> <div class="box theme-secondary"></div> </div> </div>',
             highLightLinks: '<div class="accessibility__item accessibility__highlight-links"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Highlight Links</h3> <span class="icon icon-link circle highlight-links"></span> </div> </div>',
@@ -332,13 +351,16 @@ var UICtrl = (function (helpers) {
 
       },
 
-      themePrimary: function () {
-         var isActive;
+      themePrimary: function (theme) {
+         var isActive, primaryTheme, secondaryTheme;
 
-         _$(DOMStrings.body).classList.remove(DOMStrings.themeSecondaryClass);
-         _$(DOMStrings.body).classList.toggle(DOMStrings.themePrimaryClass);
+         primaryTheme = theme.filter(th => th.type === 'primary')[0];
+         secondaryTheme = theme.filter(th => th.type === 'secondary')[0];
 
-         isActive = _$(DOMStrings.body).classList.contains(DOMStrings.themePrimaryClass);
+         _$(DOMStrings.body).classList.remove(secondaryTheme.cssClass);
+         _$(DOMStrings.body).classList.toggle(primaryTheme.cssClass);
+
+         isActive = _$(DOMStrings.body).classList.contains(primaryTheme.cssClass);
 
          return {
             themePrimary: isActive
@@ -346,17 +368,38 @@ var UICtrl = (function (helpers) {
 
       },
 
-      themeSecondary: function () {
-         var isActive;
+      themeSecondary: function (theme) {
+         var isActive, primaryTheme, secondaryTheme;
 
-         _$(DOMStrings.body).classList.remove(DOMStrings.themePrimaryClass);
-         _$(DOMStrings.body).classList.toggle(DOMStrings.themeSecondaryClass);
+         primaryTheme = theme.filter(th => th.type === 'primary')[0];
+         secondaryTheme = theme.filter(th => th.type === 'secondary')[0];
 
-         isActive = _$(DOMStrings.body).classList.contains(DOMStrings.themeSecondaryClass);
+         _$(DOMStrings.body).classList.remove(primaryTheme.cssClass);
+         _$(DOMStrings.body).classList.toggle(secondaryTheme.cssClass);
+
+         isActive = _$(DOMStrings.body).classList.contains(secondaryTheme.cssClass);
 
          return {
             themeSecondary: isActive
          }
+      },
+
+      addCSSFiles: function (files) {
+         files.map(function (obj) {
+            // Get HTML head element 
+            var head = document.getElementsByTagName('HEAD')[0];
+
+            // Create new link Element 
+            var link = document.createElement('link');
+
+            // set the attributes for link element  
+            link.rel = 'stylesheet';
+
+            link.href = obj.cssFile;
+
+            // Append link element to HTML head 
+            head.appendChild(link);
+         });
       },
 
       drawProgress: function () {
@@ -384,7 +427,6 @@ var UICtrl = (function (helpers) {
 
          // draw progress 
          value = this.drawProgress();
-
 
          return {
             increaseSpacing: value
@@ -429,20 +471,25 @@ var UICtrl = (function (helpers) {
           */
          var zoom;
 
-         zoom = settings.zoom;
+         if (type === 'in') {
+            zoom = settings.zoomCurrentStep += 1
+         } else {
+            zoom = 0;
+            settings.zoomCurrentStep = 0
+         }
 
-         type === 'in' ? zoom++ : zoom--;
-
-         _$(DOMStrings.html).style.zoom = zoom + '%';
+         _$(DOMStrings.html).style.zoom = settings.zoomSteps[zoom] + '%';
 
          return {
-            zooming: zoom
+            zooming: settings.zoomSteps[zoom]
          }
 
       },
+
       disableSaveButton: function () {
          _$(DOMStrings.saveLocalStorage).setAttribute('disabled', 'disabled');
       },
+
       enableSaveButton: function () {
          _$(DOMStrings.saveLocalStorage).removeAttribute('disabled');
       }
@@ -469,7 +516,7 @@ var storageCtrl = (function () {
       FDecrease: false,
       FDefault: false,
       themePrimary: false,
-      themeSecondary: false
+      themeSecondary: false,
    }
 
    if (localStorage.getItem('ACC') == null) {
@@ -550,7 +597,21 @@ var itemCtrl = (function () {
          readerGuide: false,
          readSpeaker: false,
          increaseCursor: false,
-         drag: false
+         drag: false,
+         theme: [{
+            type: 'primary',
+            cssFile: './css/theme-primary.css',
+            cssClass: 'ACC__THEMEPRIMARY',
+            color: '#FCC016',
+            colorReverse: '#083689'
+         },
+         {
+            type: 'secondary',
+            cssFile: './css/theme-primary.css',
+            cssClass: 'ACC__THEMESECONDARY',
+            color: '#B0D34B',
+            colorReverse: '#171717'
+         }],
       },
       currentValue: storageCtrl.getACC()
    };
@@ -616,9 +677,10 @@ var App = (function (UI, Item, helpers, storage) {
          on(_$(DOMSelector.themeSecondary), 'click', themeSecondary);
 
          // update contrast
-         UI.toggleClass(value.themePrimary, DOMSelector.body, DOMSelector.themePrimaryClass);
-         UI.toggleClass(value.themeSecondary, DOMSelector.body, DOMSelector.themeSecondaryClass);
-
+         var primary = options.theme.filter(obj => obj.type === 'primary')[0];
+         var secondary = options.theme.filter(obj => obj.type === 'secondary')[0];
+         UI.toggleClass(value.themePrimary, DOMSelector.body, primary.cssClass);
+         UI.toggleClass(value.themeSecondary, DOMSelector.body, secondary.cssClass);
       }
 
       // READ GUIDE LINE
@@ -647,7 +709,13 @@ var App = (function (UI, Item, helpers, storage) {
 
       // SPACING
       if (options.increaseSpacing) {
-         on(_$(DOMSelector.rangeSlider), 'input', increaseSpacing);
+         var isIE = /*@cc_on!@*/false || !!document.documentMode;
+         if (isIE) {
+            on(_$(DOMSelector.rangeSlider), 'click', increaseSpacing);
+
+         } else {
+            on(_$(DOMSelector.rangeSlider), 'input', increaseSpacing);
+         }
 
          // // update spacing 
          _$(DOMSelector.html).style.wordSpacing = value.increaseSpacing + 'px';
@@ -675,6 +743,12 @@ var App = (function (UI, Item, helpers, storage) {
          UI.toggleClass(value.zoomOut, DOMSelector.zoomOut, DOMSelector.active);
       }
 
+      // theme 
+      if (options.theme) {
+         // add css files 
+         UI.addCSSFiles(options.theme);
+      }
+
       // DRAG AND DROP
       if (options.drag) {
 
@@ -684,6 +758,8 @@ var App = (function (UI, Item, helpers, storage) {
             console.info("Please Note that the drag and drop feature doesn't support in your browser!");
          }
 
+         // add drag attribute
+         _$(DOMSelector.container).setAttribute('draggable', 'true');
 
          var dragStart, dragOver, drop, element, offset, wrapper, style
 
@@ -803,7 +879,7 @@ var App = (function (UI, Item, helpers, storage) {
       var tp, status;
 
       // update UI
-      tp = UI.themePrimary(e);
+      tp = UI.themePrimary(options.theme);
 
       // toggle first theme
       status = tp.themePrimary === true ? false : false;
@@ -818,7 +894,7 @@ var App = (function (UI, Item, helpers, storage) {
       var ts, status;
 
       // update UI
-      ts = UI.themeSecondary();
+      ts = UI.themeSecondary(options.theme);
 
       // toggle second theme
       status = ts.themeSecondary === true ? false : false;
@@ -928,5 +1004,19 @@ ACC.init('#app', {
    readerGuide: true,
    readSpeaker: true,
    increaseCursor: true,
-   drag: true
+   drag: false,
+   theme: [{
+      type: 'secondary',
+      cssFile: 'custom-theme.css',
+      cssClass: 'ACC__CUSTOMTHEME',
+      color: '#FCC016',
+      colorReverse: '#083689'
+   },
+   {
+      type: 'primary',
+      cssFile: 'custom-theme2.css',
+      cssClass: 'ACC__CUSTOMTHEME2',
+      color: '#FCC016',
+      colorReverse: '#083689'
+   }],
 })

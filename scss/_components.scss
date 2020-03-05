@@ -1,4 +1,16 @@
 #accessibility.accessibility {
+    .icon-drag {
+        font-size: 35px;
+        color: $color-primary;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: move;
+        text-align: right;
+        width: 100%;
+        display: block;
+    }
+
     & .accessibility__heading {
         font-size: 17px;
         font-weight: 700;
@@ -133,14 +145,14 @@
         &.accessibility__contrast-theme {
             .theme-primary {
                 background-color: transparent !important;
-                &::after {
-                    content: " ";
+                & span:first-of-type {
+                    // content: " ";
                     border-bottom: 40px solid $color-primary;
                     border-left: 40px solid transparent;
                     width: 0;
                     position: absolute;
                 }
-                &::before {
+                & span:last-of-type {
                     content: " ";
                     border-top: 40px solid $color-primary-reverse;
                     border-right: 40px solid transparent;
@@ -151,19 +163,19 @@
 
             .theme-secondary {
                 background-color: transparent !important;
-                &::after {
-                    content: " ";
+                & span:first-of-type {
+                    // content: " ";
                     border-bottom: 40px solid $color-secondary-reverse;
                     border-left: 40px solid transparent;
                     width: 0;
                     position: absolute;
                 }
-                &::before {
-                    content: " ";
+                & span:last-of-type {
+                    // content: " ";
                     border-top: 40px solid $color-secondary;
                     border-right: 40px solid transparent;
                     width: 0;
-                    position: absolute;
+                    // position: absolute;
                 }
             }
         }

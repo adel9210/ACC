@@ -239,7 +239,7 @@ var UICtrl = (function (helpers) {
          markup = {
             wrapper: '<section id="accessibility" class="accessibility"><span class="icon icon-close accessibility--close"></span> <h2 class="accessibility__heading">Accessibility tool Panel</h2> %items% </section>',
             fontResize: ' <div class="accessibility__item accessibility__font-resize"> <h3 class="accessibility__item--heading">Font Resize</h3> <div class="accessibility__item--box"> <div class="box increase">A++</div> <div class="box decrease">A+</div> <div class="box default">A</div> </div> </div>',
-            ContrastTheme: '<div class="accessibility__item accessibility__contrast-theme"> <h3 class="accessibility__item--heading">Contrast Theme</h3> <div class="accessibility__item--box"> <div class="box theme-primary"></div> <div class="box theme-secondary"></div> </div> </div>',
+            ContrastTheme: ' <div class="accessibility__item accessibility__contrast-theme"> <h3 class="accessibility__item--heading">Contrast Theme</h3> <div class="accessibility__item--box"> <div class="box theme-primary"> <span class="theme-primary--1"></span> <span class="theme-primary--2"></span> </div> <div class="box theme-secondary"> <span class="theme-secondary--1"></span> <span class="theme-secondary--2"></span> </div> </div> </div>',
             highLightLinks: '<div class="accessibility__item accessibility__highlight-links"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Highlight Links</h3> <span class="icon icon-link circle highlight-links"></span> </div> </div>',
             highLightHeadings: '<div class="accessibility__item accessibility__highlight-heading"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Highlight Heading</h3> <span class="icon icon-think circle highlight-headings"></span> </div> </div>',
             readableFont: '<div class="accessibility__item accessibility__readable-font"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Readable Font</h3> <span class="icon icon-font circle readable-font"></span> </div> </div>',
@@ -249,7 +249,8 @@ var UICtrl = (function (helpers) {
             readerGuideEle: '<div class="ACC__READGUIDELINE"></div>',
             readSpeaker: ' <div class="accessibility__item accessibility__read-speaker"> <h3 class="accessibility__item--heading">Read Speaker</h3> <span class="icon icon-play"></span> <a href="" class="accessibility__item--heading-2"> Start </a> </div>',
             increaseCursor: ' <div class="accessibility__item accessibility__increase-cursor"> <div class="accessibility__item--circle"> <h3 class="accessibility__item--heading">Increase cursor</h3> <span class="icon icon-click circle cursor"></span> </div> </div>',
-            buttons: '<div class="accessibility__buttons"> <button class="save-preference" disabled="disabled">Save Preference</button> <a href="" class="reset">Reset</a> </div>'
+            buttons: '<div class="accessibility__buttons"> <button class="save-preference" disabled="disabled">Save Preference</button> <a href="" class="reset">Reset</a> </div>',
+            drag: '<span class="icon icon-drag"></span>'
          }
 
          itemList = '';
@@ -340,9 +341,9 @@ var UICtrl = (function (helpers) {
       increaseCursor: function () {
          var isActive;
 
-         _$(DOMStrings.body).classList.toggle(DOMStrings.cursorClass);
+         _$(DOMStrings.html).classList.toggle(DOMStrings.cursorClass);
 
-         isActive = _$(DOMStrings.body).classList.contains(DOMStrings.cursorClass);
+         isActive = _$(DOMStrings.html).classList.contains(DOMStrings.cursorClass);
 
 
          return {
@@ -681,6 +682,12 @@ var App = (function (UI, Item, helpers, storage) {
          var secondary = options.theme.filter(obj => obj.type === 'secondary')[0];
          UI.toggleClass(value.themePrimary, DOMSelector.body, primary.cssClass);
          UI.toggleClass(value.themeSecondary, DOMSelector.body, secondary.cssClass);
+
+         // update 
+         _$(DOMSelector.themePrimary + '--1').style.borderBottomColor = primary.color;
+         _$(DOMSelector.themePrimary + '--2').style.borderTopColor = primary.colorReverse;
+         _$(DOMSelector.themeSecondary + '--1').style.borderBottomColor = secondary.color;
+         _$(DOMSelector.themeSecondary + '--2').style.borderTopColor = secondary.colorReverse;
       }
 
       // READ GUIDE LINE
@@ -759,7 +766,7 @@ var App = (function (UI, Item, helpers, storage) {
          }
 
          // add drag attribute
-         _$(DOMSelector.container).setAttribute('draggable', 'true');
+         _$('.icon-drag').setAttribute('draggable', 'true');
 
          var dragStart, dragOver, drop, element, offset, wrapper, style
 
@@ -781,9 +788,8 @@ var App = (function (UI, Item, helpers, storage) {
             // console.log(event.clientX)
 
             offset = event.dataTransfer.getData("text/plain").split(',');
-
-            element.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
-            element.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
+            element.style.left = (event.clientX) + 'px';
+            element.style.top = (event.clientY) + 'px';
 
 
 
@@ -991,32 +997,3 @@ var App = (function (UI, Item, helpers, storage) {
 
 })(UICtrl, itemCtrl, helpersCtrl, storageCtrl);
 
-
-
-ACC.init('#app', {
-   fontResize: true,
-   ContrastTheme: true,
-   highLightLinks: true,
-   highLightHeadings: true,
-   readableFont: true,
-   zooming: true,
-   increaseSpacing: true,
-   readerGuide: true,
-   readSpeaker: true,
-   increaseCursor: true,
-   drag: false,
-   theme: [{
-      type: 'secondary',
-      cssFile: 'custom-theme.css',
-      cssClass: 'ACC__CUSTOMTHEME',
-      color: '#FCC016',
-      colorReverse: '#083689'
-   },
-   {
-      type: 'primary',
-      cssFile: 'custom-theme2.css',
-      cssClass: 'ACC__CUSTOMTHEME2',
-      color: '#FCC016',
-      colorReverse: '#083689'
-   }],
-})

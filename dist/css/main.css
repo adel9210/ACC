@@ -98,6 +98,7 @@
           box-shadow: 0px 2px 5px #ccc;
   word-spacing: 0;
   background: #ffffff;
+  position: fixed;
 }
 
 #accessibility.accessibility *,
@@ -135,6 +136,18 @@
   font-size: 24px;
   color: #083689 !important;
   cursor: pointer;
+}
+
+#accessibility.accessibility .icon-drag {
+  font-size: 35px;
+  color: #083689;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: move;
+  text-align: right;
+  width: 100%;
+  display: block;
 }
 
 #accessibility.accessibility .accessibility__heading {
@@ -277,15 +290,14 @@
   background-color: transparent !important;
 }
 
-#accessibility.accessibility .accessibility__item.accessibility__contrast-theme .theme-primary::after {
-  content: " ";
+#accessibility.accessibility .accessibility__item.accessibility__contrast-theme .theme-primary span:first-of-type {
   border-bottom: 40px solid #083689;
   border-left: 40px solid transparent;
   width: 0;
   position: absolute;
 }
 
-#accessibility.accessibility .accessibility__item.accessibility__contrast-theme .theme-primary::before {
+#accessibility.accessibility .accessibility__item.accessibility__contrast-theme .theme-primary span:last-of-type {
   content: " ";
   border-top: 40px solid #FCC016;
   border-right: 40px solid transparent;
@@ -297,20 +309,17 @@
   background-color: transparent !important;
 }
 
-#accessibility.accessibility .accessibility__item.accessibility__contrast-theme .theme-secondary::after {
-  content: " ";
+#accessibility.accessibility .accessibility__item.accessibility__contrast-theme .theme-secondary span:first-of-type {
   border-bottom: 40px solid #171717;
   border-left: 40px solid transparent;
   width: 0;
   position: absolute;
 }
 
-#accessibility.accessibility .accessibility__item.accessibility__contrast-theme .theme-secondary::before {
-  content: " ";
+#accessibility.accessibility .accessibility__item.accessibility__contrast-theme .theme-secondary span:last-of-type {
   border-top: 40px solid #B0D34B;
   border-right: 40px solid transparent;
   width: 0;
-  position: absolute;
 }
 
 *, *:before, *:after {
@@ -1179,7 +1188,7 @@ body.ACC__HIGHLIGHTLINK a {
   color: #B0D34B !important;
 }
 
-body.ACC__CURSOR {
+html.ACC__CURSOR {
   cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"), auto;
 }
 

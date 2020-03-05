@@ -10,7 +10,7 @@
 </head>
 
 <body>
-<!-- 
+    <!-- 
      <div>
         <span class="icon icon-gear accessibility--toggle"></span>
     </div> -->
@@ -107,7 +107,7 @@
             <button class="save-preference">Save Preference</button>
             <a href="" class="reset">Reset</a>
         </div>
-    </section> --> 
+    </section> -->
 
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet asperiores odio accusamus, iure similique aperiam
         praesentium ad, deleniti laborum impedit, officiis veniam quia qui at cumque ab est! Sequi, ex.</p>
@@ -116,6 +116,7 @@
         officia?</h6>
     <a href="">dassssssss addds</a>
 
+
     <div id="app"></div>
 </body>
 
@@ -123,3 +124,47 @@
 
 
 <script src="dist/js/ACC.min.js"></script>
+
+<style>
+    #app {
+        /* left: 0;
+    position: absolute;
+    top: 20px;
+		z-index: 99999999999999999 */
+    }
+
+    #accessibility {
+        background: #fff;
+        position: relative
+    }
+</style>
+
+<script>
+    ACC.init('#app', {
+        fontResize: true,
+        ContrastTheme: true,
+        highLightLinks: true,
+        highLightHeadings: true,
+        readableFont: true,
+        zooming: true,
+        increaseSpacing: true,
+        readerGuide: true,
+        readSpeaker: true,
+        increaseCursor: true,
+        drag: true,
+        theme: [{
+            type: 'secondary',
+            cssFile: '././custom-theme.css',
+            cssClass: 'ACC__CUSTOMTHEME',
+            color: '#000',
+            colorReverse: '#ccc'
+        },
+        {
+            type: 'primary',
+            cssFile: 'custom-theme2.css',
+            cssClass: 'ACC__CUSTOMTHEME2',
+            color: '#000000',
+            colorReverse: '#eee'
+        }],
+    })
+</script>

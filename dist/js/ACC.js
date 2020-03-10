@@ -551,7 +551,7 @@ var storageCtrl = (function () {
          var ACCString;
 
          // check zoom status 
-         ACCValues.zooming >= 100 ? ACCValues.zoomIn = true : ACCValues.zoomIn = false;
+         ACCValues.zooming > 100 ? ACCValues.zoomIn = true : ACCValues.zoomIn = false;
          ACCValues.zooming < 100 ? ACCValues.zoomOut = true : ACCValues.zoomOut = false;
 
          // check font size 
@@ -736,7 +736,7 @@ var App = (function (UI, Item, helpers, storage) {
 
          // update cursor  
          UI.toggleClass(value.increaseCursor, DOMSelector.increaseCursor, DOMSelector.active);
-         UI.toggleClass(value.increaseCursor, DOMSelector.body, DOMSelector.cursorClass);
+         UI.toggleClass(value.increaseCursor, DOMSelector.html, DOMSelector.cursorClass);
       }
 
       // ZOOMING

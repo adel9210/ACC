@@ -125,20 +125,6 @@
 
 <script src="dist/js/ACC.min.js"></script>
 
-<style>
-    #app {
-        /* left: 0;
-    position: absolute;
-    top: 20px;
-		z-index: 99999999999999999 */
-    }
-
-    #accessibility {
-        background: #fff;
-        position: relative
-    }
-</style>
-
 <script>
     ACC.init('#app', {
         fontResize: true,
@@ -151,7 +137,7 @@
         readerGuide: true,
         readSpeaker: true,
         increaseCursor: true,
-        drag: true,
+        drag: false,
         theme: [{
             type: 'secondary',
             cssFile: '././custom-theme.css',
